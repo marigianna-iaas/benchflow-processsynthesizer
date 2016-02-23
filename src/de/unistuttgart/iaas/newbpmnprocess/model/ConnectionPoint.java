@@ -13,8 +13,6 @@ public class ConnectionPoint{
 	public ConnectionPoint(String fid, String type,  FlowNode node)
 	{
 		this.fid = fid;
-		//! Bad design	
-		//FIXME: refactoring - this is basically not needed after the inheritance refactoring
 		this.type = type;
 		this.neededIncoming = 0;
 		this.neededOutgoing = 0;
@@ -23,22 +21,12 @@ public class ConnectionPoint{
 	public ConnectionPoint(String fid, String type, int incoming, int outgoing, FlowNode node)
 	{
 		this.fid = fid;
-		//! Bad design	
-		//FIXME: refactoring - this is basically not needed after the inheritance refactoring
 		this.type = type;
 		this.neededIncoming = incoming;
 		this.neededOutgoing = outgoing;
 		this.flownode = EcoreUtil.copy(node);
 	}
-//	
-//	public void initConnectionPointFromNode(String fid, String type, int incoming, int outgoing)
-//	{
-//		this.fid = fid;
-//		this.type = type;
-//		this.neededIncoming = incoming;
-//		this.neededOutgoing = outgoing;
-//		
-//	}
+
 	
 	public boolean isConnected()
 	{

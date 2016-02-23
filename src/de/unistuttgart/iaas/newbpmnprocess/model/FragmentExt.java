@@ -91,19 +91,6 @@ public class FragmentExt extends ModelInstance {
 		
 	}
 	
-//
-//	public FragmentExt(String fid, String modelFileURI, boolean hasStartEvent, boolean hasEndEvent, List<ConnectionPoint> connectionPoints)
-//	{ 
-//		super();	//FIXME: there should be a local folder of files with the fragments!!!
-//		this.id = fid;
-//		this.filePath = modelFileURI;
-//		this.hasStartEvent = hasStartEvent;
-//		this.hasEndEvent = hasEndEvent;
-//		this.connectionPoints = connectionPoints;
-//		fixFragmentsConnections();
-//		isValidFragment = checkIfValidFragment();
-//	}
-		
 	/**
 	 * For loading a fragment back from the db
 	 * @param fid
@@ -123,8 +110,7 @@ public class FragmentExt extends ModelInstance {
 		this.numberOfFlowNodes = numberOfFlowNodes;
 		fixFragmentsConnections();
 		isValidFragment = checkIfValidFragment();
-	//	fixFragmentsConnections();
-	//	isValidFragment = checkIfValidFragment();
+
 	}
 
 

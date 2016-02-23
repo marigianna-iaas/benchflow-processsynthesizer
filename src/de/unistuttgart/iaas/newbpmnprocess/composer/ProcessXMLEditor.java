@@ -288,9 +288,6 @@ public class ProcessXMLEditor {
 			XPath xpath = xpathFactory.newXPath();
 			XPathExpression expr = xpath.compile(xPatern);
 			NodeList nodes = (NodeList) expr.evaluate(finalProcessXML, XPathConstants.NODESET);
-//			for (int i = 0; i < nodes.getLength(); ++i) {
-//			   nodes.item(i);
-//			}
 			return nodes.item(0);
 		} catch (XPathExpressionException e1) {
 			e1.printStackTrace();
@@ -303,10 +300,6 @@ public class ProcessXMLEditor {
 	public ConnectionPoint getBaseCp() {
 		return baseCP;
 	}
-
-//	public void setBaseCp(ConnectionPoint cp) {
-//		this.baseCP = cp;
-//	}
 
 	public ConnectionPoint getCompareCP() {
 		return compareCP;

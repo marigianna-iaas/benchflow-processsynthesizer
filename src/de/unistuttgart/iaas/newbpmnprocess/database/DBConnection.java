@@ -61,35 +61,6 @@ public class DBConnection {
 
 	}
 
-//skourama : I think this is not used anymore
-//	public ResultSet insertData_WithGeneratedKeys(String sql, Object[] Values)
-//	{
-//		ResultSet rst = null;
-//		try
-//		{
-//			Connection conn = setupConnection();
-//			PreparedStatement statement = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-//			
-//			for (int i=0;i<Values.length;i++)
-//			{
-//				statement.setObject(i+1, Values[i]);
-//			}
-//			
-//			statement.executeUpdate();
-//			rst = statement.getGeneratedKeys();
-//			
-//			statement.close();
-//		}
-//		
-//		catch (Exception ex)
-//		{
-//			System.out.println(ex.getMessage());
-//		}
-//		
-//		return rst;
-//	}
-//	
-	
 	public ResultSet selectData(String sql)
 	{
 		ResultSet rst = null;
@@ -108,7 +79,7 @@ public class DBConnection {
 		return rst;
 	}
 
-	//using executeUpdate for delete inserts etc
+//using executeUpdate for delete inserts etc
 //	public ResultSet selectData2(String sql)
 //	{
 //		ResultSet rst = null;

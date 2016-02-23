@@ -22,6 +22,11 @@ import org.xml.sax.SAXException;
 
 import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
 
+/**
+ * 
+ * @author awahab
+ *
+ */
 public class JbpmSpecificModification {
 
 	Constants ConstObj = new Constants();

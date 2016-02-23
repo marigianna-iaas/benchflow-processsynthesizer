@@ -16,6 +16,11 @@ import de.unistuttgart.iaas.newbpmnprocess.composer.ProcessValidationParameters;
 import de.unistuttgart.iaas.newbpmnprocess.model.FragmentExt;
 import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
 
+/**
+ * 
+ * @author awahab, skourama
+ *
+ */
 public class Validator {
 	
 	private static Collection<EClass> activitytypes = Arrays.asList(

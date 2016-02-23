@@ -7,59 +7,6 @@ import de.unistuttgart.iaas.newbpmnprocess.database.DBConnection;
  
 public class SizeCombinationsCalculator {
  	
-//    private static List<List<Integer>> permute(List<Integer> input) {
-//    	List<List<Integer>> output = new ArrayList<List<Integer>>();
-//        if (input.isEmpty()) {
-//            output.add(new ArrayList<Integer>());
-//            return output;
-//        }
-//        List<Integer> list = new ArrayList<Integer>(input);
-//        Integer head = list.get(0);
-//        List<Integer> rest = list.subList(1, list.size());
-//        for (List<Integer> permutations : permute(rest)) {
-//            List<List<Integer>> subLists = new ArrayList<List<Integer>>();
-//            for (int i = 0; i <= permutations.size(); i++) {
-//                List<Integer> subList = new ArrayList<Integer>();
-//                subList.addAll(permutations);
-//                subList.add(i, head);
-//                subLists.add(subList);
-//            }
-//            output.addAll(subLists);
-//        }
-//        return output;
-//    }
-//    
-//	@SuppressWarnings("unused")
-//	public static ArrayList<ArrayList<Integer>> permute(int[] num) {
-//		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
-//		//start from an empty list
-//		result.add(new ArrayList<Integer>());
-//	 
-//		for (int i = 0; i < num.length; i++) {
-//			//list of list in current iteration of the array num
-//			ArrayList<ArrayList<Integer>> current = new ArrayList<ArrayList<Integer>>();
-//	 
-//			for (ArrayList<Integer> l : result) {
-//				// # of locations to insert is largest index + 1
-//				for (int j = 0; j < l.size()+1; j++) {
-//					// + add num[i] to different locations
-//					l.add(j, num[i]);
-//	 
-//					ArrayList<Integer> temp = new ArrayList<Integer>(l);
-//					current.add(temp);
-//	 
-//					//System.out.println(temp);
-//	 
-//					// - remove num[i] add
-//					l.remove(j);
-//				}
-//			}
-//	 
-//			result = new ArrayList<ArrayList<Integer>>(current);
-//		}
-//	 
-//		return result;
-//	}
 
     //FIXME: this method can be splitted - organized better
 	//FIXME: add permutations for the combinations so that we really get every available combination - maybe it is too much
@@ -159,7 +106,6 @@ public class SizeCombinationsCalculator {
 		resultSizes = connec.selectData(selectFragmentSql);
 		resultSizesArr = new ArrayList<Integer>();
 		try {
-			// if(resultFragments != null) resultFragments.beforeFirst();
 			while (resultSizes.next()) {
 				resultSizesArr.add(resultSizes.getInt("size"));
 			}

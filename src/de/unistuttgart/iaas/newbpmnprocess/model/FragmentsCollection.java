@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import org.eclipse.bpmn2.FlowNode;
 import de.unistuttgart.iaas.bpmn.collection.BpmnCollectionSingleton;
 import de.unistuttgart.iaas.newbpmnprocess.database.DBConnection;
-import de.unistuttgart.iaas.newbpmnprocess.database.DBConnectionMiddleware;
 import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
 
 public class FragmentsCollection extends BpmnCollectionSingleton{
@@ -15,7 +14,6 @@ public class FragmentsCollection extends BpmnCollectionSingleton{
 	
 	protected List<FragmentExt> fragmentsCollection = new ArrayList<FragmentExt>();
 	private List<File> bpmnFilePaths= new ArrayList<File>();
-	DBConnectionMiddleware conn1=new DBConnectionMiddleware();
 	Constants constObj = new Constants();
 
 	/**

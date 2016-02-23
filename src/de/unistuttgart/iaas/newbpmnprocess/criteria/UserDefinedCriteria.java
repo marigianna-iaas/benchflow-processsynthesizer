@@ -21,9 +21,7 @@ import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
 
 public class UserDefinedCriteria {
 	private final String m_path;
-	// TODO: remove the following - it is not needed any more
 	private List<List<FragmentExt>> selectedFragments;
-
 	private List<Criterio> criteriaList;
 	
 
@@ -86,29 +84,13 @@ public class UserDefinedCriteria {
 						.getElementsByTagName(
 								Constants.CriteriaParalGatewayElement).item(0)
 						.getTextContent()));
-				// TODO: remove the following it is not needed anymore
-				// //System.out.println(criteria.getActDetails()+","+criteria.getTotalTasks()+","+criteria.getTask()+","+criteria.getServiceTask()+","+criteria.getCallActivity()+","+criteria.getExclGateway()+","+criteria.getParalGateway()+";");
-				//
-				// int FragmentID=0;
-				// FragmentID=getFragmentID(criterio);
-				// if(FragmentID!=0)
-				// {
-				// FragmentsList.add(FragmentID);
-				// }
 				criteriaList.add(criterio);
 			}
-			//computeSize(doc);
-//			processEngine = doc
-//					.getElementsByTagName(Constants.CriteriaProcEngineElement)
-//					.item(0).getTextContent();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -182,7 +164,6 @@ public class UserDefinedCriteria {
 		
 		return fragment;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -249,10 +230,6 @@ public class UserDefinedCriteria {
 
 		String exclGatewayQuery = "\'ExclusiveGatewayImpl\' ";
 		String parallelGatewayQuery = "\'ParallelGatewayImpl\'";
-
-		// String parallelGatewayQuery =
-		// "t4.type = \'ParallelGatewayImpl\'AND 	t4.counter = " +
-		// cr.getParalGateway() ;
 
 		if (cr.getTask() != 0) {
 			query += "t" + tableCnt + ".type = " + scriptTaskQuery + andStr
