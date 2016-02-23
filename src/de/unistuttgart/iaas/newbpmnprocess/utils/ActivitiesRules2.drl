@@ -1,0 +1,41 @@
+//created on: February, 2016
+package de.unistuttgart.newbpmnprocess.utils
+
+import org.eclipse.bpmn2.FlowNode;
+import de.unistuttgart.iaas.newbpmnprocess.model.ConnectionPoint;
+
+rule "Activities no conn"
+	when
+		$node : FlowNode()
+		$connP: ConnectionPoint()
+		eval($node.getIncoming().size()>=1)
+		eval($node.getOutgoing().size()>=1)
+		
+	then
+		$connP.setNeededIncoming(0);
+		$connP.setNeededOutgoing(0);
+	end
+	
+	rule "Activities 1 outgoing"
+	when
+		$node : FlowNode()
+		$connP: ConnectionPoint()
+		eval($node.getIncoming().size()>=1)
+		eval($node.getOutgoing().size()<1)
+		
+	then
+		$connP.setNeededIncoming(0);
+		$connP.setNeededOutgoing(1);
+	end
+	
+	rule "Activities 1 incoming"
+	when
+		$node : FlowNode()
+		$connP: ConnectionPoint()
+		eval($node.getIncoming().size()<1)
+		eval($node.getOutgoing().size()>=1)
+		
+	then
+		$connP.setNeededIncoming(1);
+		$connP.setNeededOutgoing(0);
+	end

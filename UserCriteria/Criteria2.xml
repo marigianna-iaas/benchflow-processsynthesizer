@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Criteria xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.w3schools.com CriteriaSchema.xsd">
+	<fragments>
+		<fragment>
+			<DetailActivities>
+				<ScriptTasks>0</ScriptTasks>
+				<ServiceTasks>0</ServiceTasks>
+				<CallActivities>3</CallActivities>
+			</DetailActivities>
+			<ExclusiveGateways>0</ExclusiveGateways>
+			<ParallelGateways>0</ParallelGateways>
+		</fragment>
+		<fragment>
+			<DetailActivities>
+				<ScriptTasks>0</ScriptTasks>
+				<ServiceTasks>0</ServiceTasks>
+				<CallActivities>2</CallActivities>
+			</DetailActivities>
+			<ExclusiveGateways>1</ExclusiveGateways>
+			<ParallelGateways>0</ParallelGateways>
+		</fragment>
+	</fragments>
+	<SynthesizedProcess>
+		<CFC Min="0" Max="24">true</CFC>
+		<ProcessEngine>Camunda</ProcessEngine>
+	</SynthesizedProcess>
+</Criteria>
