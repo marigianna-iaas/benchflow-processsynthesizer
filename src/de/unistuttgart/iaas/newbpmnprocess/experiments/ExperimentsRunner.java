@@ -5,8 +5,10 @@ package de.unistuttgart.iaas.newbpmnprocess.experiments;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.bpmn2.util.Bpmn2ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
+
 import de.unistuttgart.iaas.newbpmnprocess.composer.NewProcessComposer;
 import de.unistuttgart.iaas.newbpmnprocess.composer.SizeCombinationsCalculator;
 import de.unistuttgart.iaas.newbpmnprocess.configuration.ErrorHandler;
@@ -17,6 +19,7 @@ import de.unistuttgart.iaas.newbpmnprocess.configuration.IErrorHandler;
 import de.unistuttgart.iaas.newbpmnprocess.configuration.Settings;
 import de.unistuttgart.iaas.newbpmnprocess.criteria.UserDefinedCriteria;
 import de.unistuttgart.iaas.newbpmnprocess.model.FragmentExt;
+import de.unistuttgart.iaas.newbpmnprocess.model.FragmentsCollection;
 import de.unistuttgart.iaas.newbpmnprocess.processengines.ProcessEngine;
 
 /**
@@ -32,7 +35,11 @@ public class ExperimentsRunner {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("bpmn2", new Bpmn2ResourceFactoryImpl());
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("bpmn", new Bpmn2ResourceFactoryImpl());
-
+//	
+//		FragmentsCollection fragmentsCollection = new FragmentsCollection();
+//
+//			fragmentsCollection.loadFromFilesToDB();
+	
 		
 		ExperimentsConfigurationLoader loader = new ExperimentsConfigurationLoader();
 		
@@ -71,20 +78,21 @@ public class ExperimentsRunner {
 							int counter = 0;
 							int noOfTriedCombinations = 0;
 							log.setNoOfTriedCombinations(sizesCombinations.size());
-							for(List<Integer> sizesCombination : sizesCombinations)
-							{
+					//		for(List<Integer> sizesCombination : sizesCombinations)
+					//		{
 								noOfTriedCombinations++;
-								System.out.println("sizesCombinations: " + (++counter) + " out of " + sizesCombinations.size() + " sizesCombination" + sizesCombination);
+							//	System.out.println("sizesCombinations: " + (++counter) + " out of " + sizesCombinations.size() + " sizesCombination" + sizesCombination);
 								log.startSelectFragments();
 								
-								List<List<FragmentExt>> selectedFragments = udc.getSelectedFragments(sizesCombination); //this will return the selected fragments
+								List<List<FragmentExt>> selectedFragments = udc.getSelectedFragments(); //this will return the selected fragments
 								
 								log.endSelectFragments();
 								
-								if(selectedFragments.size()>=2) 
+								if(selectedFragments.size()>=2 && selectedFragments.size() == experiment.getCounterOfCriteria()) 
 								{
 									log.startComposition();
 									newProcessFilePath = composition(selectedFragments, experiment);
+
 									log.endComposition();
 									
 									if(newProcessFilePath  != null)
@@ -94,14 +102,26 @@ public class ExperimentsRunner {
 										//engineSpecific(experiment.getProcessEngine(), Constants.NewProcessesDirectoryFullPath);
 										log.endEngineSpecific();
 										log.setModelFound(true);
-										log.setCombinations(sizesCombination.toString());
+										//log.setCombinations(sizesCombination.toString());
 										log.setModelName(newProcessFilePath);
 										log.setNoOfTriedCombinations(noOfTriedCombinations);
-										break;
+										//break;
+										System.out.println("Process in the folder!!!");							
+
 									}
+									else{
+										System.err.println("Process file path was null");
+									}
+
 								}
+								else {
+									System.err.println("Could not find matching fragments on the DB. Change the criteria and try again");							
+								
+								}
+								
+								
 								udc.dumpSelectedFragments();
-							}
+					//		}
 							udc.dumpCriteriaList();
 							log.endExperimentTime();
 							logger.add(log);
@@ -121,16 +141,16 @@ public class ExperimentsRunner {
 	}
 	
 	//
-	public static List<List<FragmentExt>> selectFragments (Experiment experiment, List<Integer> sizesCombination){
+	public static List<List<FragmentExt>> selectFragments (Experiment experiment){
 		
-		return new UserDefinedCriteria(experiment.getPath()).getSelectedFragments(sizesCombination);
+		return new UserDefinedCriteria(experiment.getPath()).getSelectedFragments();
 	}
 	
 	public static String composition(List<List<FragmentExt>> selectedFragments, Experiment experiment){
 		//check fragment count inside class
 		//settings.getMinAllowedNumberOfNodes()
 		String newProcessFilePath = null;
-		if(selectedFragments.size()>=2) 
+		if(selectedFragments.size()>=2 && selectedFragments.size() == experiment.getCounterOfCriteria()) 
 		{
 			newProcessFilePath = NewProcessComposer.composeNewProcess(selectedFragments ,  experiment.getCounterOfNodes());
 		}
@@ -144,7 +164,7 @@ public class ExperimentsRunner {
 	public static void engineSpecific(ProcessEngine processEngine, String path){
 		switch (processEngine) {
 			case Camunda:
-				ProcessEngine.Camunda.modify(path);
+				//ProcessEngine.Camunda.modify(path);
 				break;
 	
 			default:

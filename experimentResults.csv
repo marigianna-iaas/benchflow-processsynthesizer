@@ -1,0 +1,188 @@
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,5,0,0.0,0,0.0,0,0.0,0,0.36668276,366682760,false,,0,
+2,20,0,0.018309585,18309585,0.0,0,0.0,0,0.167766883,167766883,false,,6,
+3,24,0,0.032568475,32568475,0.0,0,0.0,0,0.273668057,273668057,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,5,0,0.0,0,0.0,0,0.0,0,0.337195742,337195742,false,,0,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,11,0,0.028734027,28734027,0.0,0,0.0,0,0.360445854,360445854,false,,1,
+2,20,0,0.045470335,45470335,0.0,0,0.0,0,0.295068176,295068176,false,,6,
+3,24,0,0.063630139,63630139,0.0,0,0.0,0,0.455508854,455508854,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,13,0,0.031991774,31991774,0.0,0,0.0,0,0.393777783,393777783,false,,2,
+2,20,0,0.044411826,44411826,0.0,0,0.0,0,0.274107766,274107766,false,,6,
+3,24,0,0.041228578,41228578,0.0,0,0.0,0,0.510419885,510419885,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,5,0,0.0,0,0.0,0,0.0,0,0.637536723,637536723,false,,0,
+2,20,0,0.040039589,40039589,0.0,0,0.0,0,0.242040542,242040542,false,,6,
+3,24,0,0.059007913,59007913,0.0,0,0.0,0,0.46580666,465806660,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,5,0,0.0,0,0.0,0,0.0,0,0.371936109,371936109,false,,0,
+2,20,0,0.031686816,31686816,0.0,0,0.0,0,0.2592385,259238500,false,,6,
+3,24,0,0.07311655,73116550,0.0,0,0.0,0,0.501977528,501977528,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,6,0,0.0,0,0.0,0,0.0,0,0.310261658,310261658,false,,0,
+2,20,0,0.03317576,33175760,0.0,0,0.0,0,0.231412702,231412702,false,,6,
+3,24,0,0.045074845,45074845,0.0,0,0.0,0,0.474955494,474955494,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,10,0,1.13527478,1135274780,0.0,0,0.0,0,1.473521378,1473521378,false,,1,
+2,20,0,0.035854874,35854874,0.0,0,0.0,0,0.292564456,292564456,false,,6,
+3,24,0,0.050208913,50208913,0.0,0,0.0,0,0.52255427,522554270,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,10,0,1.037215773,1037215773,0.0,0,0.0,0,1.352314724,1352314724,false,,1,
+2,20,0,0.047317947,47317947,0.0,0,0.0,0,0.225489527,225489527,false,,6,
+3,24,0,0.068338552,68338552,0.0,0,0.0,0,0.485472398,485472398,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,10,0,0.024667707,24667707,0.0,0,0.0,0,0.348652705,348652705,false,,1,
+2,20,0,0.046047694,46047694,0.0,0,0.0,0,0.237531971,237531971,false,,6,
+3,24,0,0.066621636,66621636,0.0,0,0.0,0,0.50561391,505613910,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,12,0,0.024558698,24558698,0.0,0,0.0,0,0.322155941,322155941,false,,2,
+2,20,0,0.049205641,49205641,0.0,0,0.0,0,0.286871152,286871152,false,,6,
+3,24,0,0.052711327,52711327,0.0,0,0.0,0,0.478639441,478639441,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,12,0,0.023422725,23422725,0.0,0,0.0,0,0.353438065,353438065,false,,2,
+2,20,0,0.048918131,48918131,0.0,0,0.0,0,0.275468408,275468408,false,,6,
+3,24,0,0.058763478,58763478,0.0,0,0.0,0,0.522071403,522071403,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,10,0,0.025159359,25159359,0.0,0,0.0,0,0.345703882,345703882,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,15,0,0.141298321,141298321,0.001332273,1332273,0.0,0,1.783727723,1783727723,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,15,0,0.031284429,31284429,0.001235231,1235231,0.0,0,1.53046044,1530460440,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,15,0,0.022508132,22508132,0.0,0,0.0,0,0.535527102,535527102,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,20,0,0.00845997,8459970,0.0,0,0.0,0,0.455480943,455480943,false,,6,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.015992729,15992729,0.0,0,0.0,0,0.395430213,395430213,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.008974296,8974296,0.0,0,0.0,0,0.418026151,418026151,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.009179721,9179721,0.0,0,0.0,0,0.366125081,366125081,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.022649505,22649505,0.0,0,0.0,0,36.887138782,36887138782,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.036792312,36792312,0.0,0,0.0,0,0.459350858,459350858,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.013011581,13011581,0.0,0,0.0,0,0.384958869,384958869,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.171718256,171718256,2.5725E-4,257250,0.0,0,1.949384825,1949384825,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.091132282,91132282,0.0,0,0.0,0,1.656816304,1656816304,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,4.177687596,4177687596,0.0,0,0.0,0,25.975036904,25975036904,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.090602523,90602523,0.0,0,0.0,0,1.633476434,1633476434,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.153352963,153352963,0.0,0,0.0,0,1.689211221,1689211221,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,0.09086467,90864670,0.0,0,0.0,0,1.71801175,1718011750,false,,3,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,1.544798681,1544798681,0.113500285,113500285,0.038273818,38273818,2.102139814,2102139814,true,../processsynthesis/newProcess/newProcess5gmmvfg2u7svoe6nr0e1t1re2n.bpmn2,1,6& 8
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,14,0,1.60296029,1602960290,0.112012536,112012536,0.030619282,30619282,2.106940954,2106940954,true,../processsynthesis/newProcess/newProcessd6j35gm63cul8f67pejk44crpc.bpmn2,1,6& 8
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,22,0,5.652090645,5652090645,0.086132125,86132125,0.031798837,31798837,6.152176015,6152176015,true,../processsynthesis/newProcess/newProcessrbo5g0nhgi2616gd13cugm5f8q.bpmn2,1,6& 11& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,22,0,8.584260615,8584260615,0.084470927,84470927,0.038862139,38862139,9.047662125,9047662125,true,../processsynthesis/newProcess/newProcessbfs69n8a1u9567usg0nq8vo39j.bpmn2,1,6& 11& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,20,0,3.902985874,3902985874,0.225237689,225237689,0.123592855,123592855,4.683413487,4683413487,true,../processsynthesis/newProcess/newProcessrurksjrlvj22a108k8m947aopd.bpmn2,1,5& 5& 5& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,22,0,7.415016307,7415016307,0.103193093,103193093,0.043408966,43408966,8.003240726,8003240726,true,../processsynthesis/newProcess/newProcesstigc7svtieptr5g71u6ve4jo5t.bpmn2,1,6& 11& 5
+4,20,0,1.21704536,1217045360,0.069073975,69073975,0.082459777,82459777,1.387710602,1387710602,true,../processsynthesis/newProcess/newProcess2pqpa6eqr54kclb4i7p50uaoei.bpmn2,1,5& 5& 5& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,22,0,7.852026375,7852026375,0.191807945,191807945,0.045582937,45582937,8.420636575,8420636575,true,../processsynthesis/newProcess/newProcessg7qubgat062bmiao7epe28pm4e.bpmn2,1,6& 11& 5
+4,20,0,1.341108505,1341108505,0.057070021,57070021,0.080666363,80666363,1.500461348,1500461348,true,../processsynthesis/newProcess/newProcessl2te2mgopmpttmel2l57roqqvt.bpmn2,1,5& 5& 5& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,22,0,4.15217874,4152178740,0.0,0,0.0,0,16.915253594,16915253594,false,,4,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,7.450616641,7450616641,0.09338182,93381820,0.045415946,45415946,7.924203493,7924203493,true,../processsynthesis/newProcess/newProcess47u432g9lgq2oqalivts4l8rgs.bpmn2,1,6& 8& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,0.059086703,59086703,0.0,0,0.0,0,0.403256248,403256248,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,8.280123521,8280123521,0.085606428,85606428,0.058814974,58814974,8.789054966,8789054966,true,../processsynthesis/newProcess/newProcessngmu8hhsdd9esvlk701n7hbujr.bpmn2,1,6& 8& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,7.830339437,7830339437,0.115836134,115836134,0.054157158,54157158,8.348982814,8348982814,true,../processsynthesis/newProcess/newProcessj9m0c3sspk6fpt7baj5o85fc1t.bpmn2,1,6& 8& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,8.317040071,8317040071,0.0,0,0.0,0,8.670551092,8670551092,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,9.569670107,9569670107,0.292863847,292863847,1.8956E-5,18956,10.23071543,10230715430,true,../processsynthesis/newProcess/newProcessvgl9dk22lkci329mrm529datjo.bpmn2,1,6& 8& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,7.69918877,7699188770,0.090711128,90711128,2.0215E-5,20215,8.173226019,8173226019,true,../processsynthesis/newProcess/newProcessknu0leb4jdoh0mcil3lenvrak0.bpmn2,1,6& 8& 5
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,6.929284932,6929284932,0.005721072,5721072,0.0,0,7.260411147,7260411147,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,3.328321476,3328321476,1.57863E-4,157863,0.0,0,22.492859041,22492859041,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,0.776306641,776306641,3.46694E-4,346694,0.0,0,7.437660697,7437660697,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.735329899,1735329899,0.0,0,0.0,0,12.304183473,12304183473,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,5.018613803,5018613803,0.117534307,117534307,2.7519E-5,27519,5.504140969,5504140969,true,../processsynthesis/newProcess/newProcessbvk53scc6vf4aj1m3r9l2ai7ra.bpmn2,1,6& 13
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,22,0,0.0,0,0.0,0,0.0,0,0.35315198,353151980,false,,0,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,1.642522379,1642522379,0.152838258,152838258,3.3745E-5,33745,2.371785542,2371785542,true,../processsynthesis/newProcess/newProcesso69ulb8g13ir45jupsq83c43vf.bpmn2,1,6& 6& 6& 6
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,1.762827481,1762827481,0.151482555,151482555,1.6874E-5,16874,2.284359022,2284359022,true,../processsynthesis/newProcess/newProcesseilkiubn5q5cv62ltfj175thrk.bpmn2,1,6& 6& 6& 6
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,4.570949633,4570949633,5.221583613,5221583613,3.7907E-5,37907,10.24367409,10243674090,true,../processsynthesis/newProcess/newProcessbcfjjfajefti579ekd00nk4h1.bpmn2,1,6& 6& 6& 6
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,1.505461525,1505461525,0.090392203,90392203,4.616E-5,46160,1.915272612,1915272612,true,../processsynthesis/newProcess/newProcessrcckr0cspa32jecn962ssuke52.bpmn2,1,6& 6& 6& 6
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,7.641755612,7641755612,0.082106493,82106493,2.3802E-5,23802,8.210261265,8210261265,true,../processsynthesis/newProcess/newProcesst9cpbjhr9gm082kf5potffs5jm.bpmn2,1,6& 6& 6& 6
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,1.446218888,1446218888,0.0,0,0.0,0,1.827849252,1827849252,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,1.659322187,1659322187,0.0,0,0.0,0,2.018932672,2018932672,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,1.899469747,1899469747,0.00413758,4137580,0.0,0,2.277110655,2277110655,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,7.431998109,7431998109,17.572085376,17572085376,0.0,0,25.402854581,25402854581,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,6.489941391,6489941391,0.001134273,1134273,0.0,0,6.837541782,6837541782,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,5.404986719,5404986719,0.001179225,1179225,0.0,0,5.845393559,5845393559,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,5.528055311,5528055311,1.00083E-4,100083,0.0,0,5.875505339,5875505339,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.526641584,1526641584,0.0,0,0.0,0,11.533178918,11533178918,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,3.827605483,3827605483,0.0,0,0.0,0,4.154726887,4154726887,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,4.023601337,4023601337,0.0,0,0.0,0,4.357570334,4357570334,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,4.222207561,4222207561,0.0,0,0.0,0,4.532270359,4532270359,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,19,0,2.189383501,2189383501,0.0,0,0.0,0,2.512223474,2512223474,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,2.279042795,2279042795,0.001337317,1337317,0.0,0,2.598949257,2598949257,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,2.137677823,2137677823,0.001378315,1378315,0.0,0,2.45580111,2455801110,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,8.252759314,8252759314,226.764480302,226764480302,0.0,0,235.39985639,235399856390,false,,5,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,2.20798183,2207981830,0.090622411,90622411,2.5199E-5,25199,2.607612593,2607612593,true,../processsynthesis/newProcess/newProcessopgsv5s4kcbggivejpqjrbp37o.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.964114559,1964114559,0.125654761,125654761,1.7525E-5,17525,2.537902055,2537902055,true,../processsynthesis/newProcess/newProcessnforldq3j74aevdunmqnrd1i9b.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.877079412,1877079412,0.094714026,94714026,1.3521E-5,13521,2.275148516,2275148516,true,../processsynthesis/newProcess/newProcess66njp67pbelpkdk2gao2lovda.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+4,24,0,4.940531756,4940531756,0.0,0,0.0,0,5.276998592,5276998592,false,,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,24,0,1.5946E-5,15946,0.0,0,0.0,0,0.366294094,366294094,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,24,0,9.406098511,9406098511,202.977006206,202977006206,3.0604E-5,30604,212.808298072,212808298072,true,../processsynthesis/newProcess/newProcessrmonclrmrv48654agdoauufjti.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,24,0,8.75279779,8752797790,0.097898234,97898234,2.1298E-5,21298,9.203994243,9203994243,true,../processsynthesis/newProcess/newProcessb0mcm35qnm6kkkmjusijnkdals.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+3,24,0,8.480961048,8480961048,0.090368911,90368911,1.4169E-4,141690,8.902187459,8902187459,true,../processsynthesis/newProcess/newProcesscl90lp7vv6vi72o62bi4oteji9.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.940666769,1940666769,0.115604982,115604982,3.994E-5,39940,2.415020998,2415020998,true,../processsynthesis/newProcess/newProcessovjqo5rt5snavrg8i7clr0ilu0.bpmn2,1,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.850059651,1850059651,0.158463773,158463773,2.4215E-5,24215,2.337767025,2337767025,true,../processsynthesis/newProcess/newProcessjqpi3qr69aqolje69devkjl43h.bpmn2,1,
+3,24,0,0.7224885,722488500,0.0,0,0.0,0,0.757632065,757632065,false,,8,
+#Criteria,#Nodes,Number of execution,SelectFragments Seconds,SelectFragments Nano seconds,Composition Seconds,Composition Nano seconds,EngineSpecific Seconds,EngineSpecific Nano seconds,Experiment Seconds,Experiment Nano seconds,Model Found,Model Path,#Tried Combinations,Success Combination
+2,19,0,1.861680649,1861680649,0.115870128,115870128,1.4803E-5,14803,2.220557667,2220557667,true,../processsynthesis/newProcess/newProcess53fk52b1a18a5gdriikb4rga5q.bpmn2,1,
+3,24,0,5.92514226,5925142260,0.054491522,54491522,2.176E-6,2176,5.996294064,5996294064,true,../processsynthesis/newProcess/newProcess6fga2seapid6vkpfhcfg58ei2k.bpmn2,1,

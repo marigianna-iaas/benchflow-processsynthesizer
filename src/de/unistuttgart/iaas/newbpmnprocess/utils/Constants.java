@@ -39,7 +39,7 @@ public class Constants {
 	// Section 2
 	// Constants used in FileLoad class
 	//public static   String FragmentsDirectoryPath="C:\\Users\\Abdul Wahab\\workspace\\CleanBpmnFiles\\Fragments";
-	public static   String FragmentsDirectoryPath="../../fragments";
+	public static   String FragmentsDirectoryPath="../../fragmentsICWS";
 	//public static   String FragmentsDirectoryPath="/home/skourama/workspace/processsynthesis/testFragments/newTest";
 	//End Section 2
 	
@@ -140,7 +140,7 @@ public class Constants {
 	public static   String ConnectionUser = "root";
 	public static   String ConnectionPassword = "thesis@iaas";
 	//change this here
-	public static   String ConnectionUrl = "jdbc:mysql://localhost:3306/FragmentsRepositoryFull3";
+	public static   String ConnectionUrl = "jdbc:mysql://localhost:3306/FragmentsRepositoryFullThesis";
 	public static   String JdbcDriverName = "com.mysql.jdbc.Driver";
 	//End Section 7
 	

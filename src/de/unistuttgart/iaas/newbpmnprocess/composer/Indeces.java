@@ -1,5 +1,14 @@
 package de.unistuttgart.iaas.newbpmnprocess.composer;
-
+/**
+ * Is how I cross he list
+ * @variable fragmentlistsIndex - lists we are traversing
+ * @variable fragment1Index - which position on the first list combined
+ * @variable fragment2Index - which posiiton on the second list combined
+ * @variable memory - which matched with what in order to be able to backtrack and at the end it will give the final combination. 
+ * The first cell of the array corresponds to the first successfully defined fragment of the first list, the second of the second list and so on...
+ * @author skourama
+ *
+ */
 
 public class Indeces {
 	private int fragmentlistsIndex =0;

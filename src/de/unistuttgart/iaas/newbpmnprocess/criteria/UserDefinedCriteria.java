@@ -112,7 +112,7 @@ public class UserDefinedCriteria {
 	 * @param sizesCombination 
 	 */
 
-	public List<List<FragmentExt>> getSelectedFragments(List<Integer> sizesCombination) {
+	public List<List<FragmentExt>> getSelectedFragments() {
 		DBConnection connec = new DBConnection();
 		int crCnt = 0;
 		ResultSet resultFragments;
@@ -122,7 +122,7 @@ public class UserDefinedCriteria {
 		for (Criterio cr : criteriaList) {
 			
 			String selectFragmentSql = makeFragmentSelectionQuery(cr, crCnt,
-					criteriaList.size(), sizesCombination.get(crCnt).intValue());
+					criteriaList.size());
 			// selects all fragments that comply with specific criteria
 			resultFragments = connec.selectData(selectFragmentSql);
 			tmp = new ArrayList<FragmentExt>();
@@ -158,9 +158,15 @@ public class UserDefinedCriteria {
 		boolean hasStartEvent = resultFragment.getBoolean("hasStartEvent");
 		boolean hasEndEvent = resultFragment.getBoolean("hasEndEvent");
 		int numberOfFlowNodes = resultFragment.getInt("numberOfFlowNodes");
-		
+		int numberOfCallActivities = resultFragment.getInt("numberOfCallActivity");
+		int numberOfScriptTasks = resultFragment.getInt("numberOfScriptTasks");
+		int numberOfServiceTasks = resultFragment.getInt("numberOfServiceTasks");
+		int numberOfParallelGateways = resultFragment.getInt("numberOfParallelGateways");
+		int numberOfExclusiveGateways = resultFragment.getInt("numberOfExclusiveGateways");
+
 		FragmentExt fragment = new FragmentExt(fid, filepath, hasStartEvent,
-				hasEndEvent, numberOfFlowNodes); 
+				hasEndEvent, numberOfFlowNodes,   numberOfCallActivities, 
+				 numberOfScriptTasks,  numberOfServiceTasks,  numberOfParallelGateways, numberOfExclusiveGateways ); 
 		
 		return fragment;
 		} catch (SQLException e) {
@@ -170,122 +176,73 @@ public class UserDefinedCriteria {
 
 	}
 
-	/**
-	 * 
-	 * SELECT distinct t0.fid FROM (SELECT fid, type, count(type) as counter
-	 * FROM `connectingPoint` where 1 group by fid, type) as t0 inner join
-	 * (SELECT fid, type, count(type) as counter FROM `connectingPoint` where 1
-	 * group by fid, type) as t1 on (t0.fid = t1.fid) inner join (SELECT fid,
-	 * type, count(type) as counter FROM `connectingPoint` where 1 group by fid,
-	 * type) as t2 on (t1.fid = t2.fid) where t0.type = 'ExclusiveGatewayImpl'
-	 * AND t0.counter = 1 AND t1.type = 'CallActivityImpl' AND t1.counter = 1
-	 * AND t2.type = 'ScriptTaskImpl' AND t2.counter = "1"
-	 * @param integer 
-	 * 
-	 * @param crCnt
-	 * 
-	 */
-	// TODO: fix for the nonDetailed Query
-	// TODO: this needs to be more flexible for other types
 	private String makeFragmentSelectionQuery(Criterio cr, int fragmentPos,
-			int totalSize, int size) {
+			int totalSize) {
 
 		String query = 
-				"select * from fragments f where f.fid in  ("
-				+ " "
-				+ "SELECT distinct t0.fid"
-				+ " "
-				+ "FROM ConnectionPointsStats as t0"
-				+ " "
-				+ "inner join ConnectionPointsStats as t1 on (t0.fid = t1.fid)"
-				+ " "
-				+ "inner join ConnectionPointsStats as t2 on (t1.fid = t2.fid)"
-				+ " "
-				+ "inner join ConnectionPointsStats as t3 on (t2.fid = t3.fid)"
-				+ " "
-				+ "inner join ConnectionPointsStats as t4 on (t3.fid = t4.fid)"		
-				
-//				"select * from fragments f where f.fid in  ("
-//				+ "SELECT distinct t0.fid"
-//				+ " "
-//				+ "FROM (SELECT fid, type, count(type) as counter FROM `connectionPoints` where 1 group by fid, type) as t0"
-//				+ " "
-//				+ "inner join (SELECT fid, type, count(type) as counter FROM `connectionPoints` where 1 group by fid, type) as t1 on (t0.fid = t1.fid)"
-//				+ " "
-//				+ "inner join (SELECT fid, type, count(type) as counter FROM `connectionPoints` where 1 group by fid, type) as t2 on (t1.fid = t2.fid)"
-//				+ " "
-//				+ "inner join (SELECT fid, type, count(type) as counter FROM `connectionPoints` where 1 group by fid, type) as t3 on (t2.fid = t3.fid)"
-//				+ " "
-//				+ "inner join (SELECT fid, type, count(type) as counter FROM `connectionPoints` where 1 group by fid, type) as t4 on (t3.fid = t4.fid)"
-
-				+ " " + "where" + " ";
+				"select * from fragments where" + " ";
 
 		int tableCnt = 0;
-		String queryEnd = "); ";
 		String andStr = " AND ";
+		String queryEnd = "; ";
 
-		String scriptTaskQuery = "\'ScriptTaskImpl\'";
-		String serviceTaskQuery = "\'ServiceTaskImpl\'";
-		String callActivityQuery = "\'CallActivityImpl\' ";
+		String scriptTaskQuery = "numberOfScriptTasks";
+		String serviceTaskQuery = "numberOfServiceTasks";
+		String callActivityQuery = "numberOfCallActivity";
 
-		String exclGatewayQuery = "\'ExclusiveGatewayImpl\' ";
-		String parallelGatewayQuery = "\'ParallelGatewayImpl\'";
-
-		if (cr.getTask() != 0) {
-			query += "t" + tableCnt + ".type = " + scriptTaskQuery + andStr
-					+ "t" + tableCnt + ".counter = " + cr.getTask();
+		String exclGatewayQuery = "numberOfExclusiveGateways";
+		String parallelGatewayQuery = "numberOfParallelGateways";
+		//FIXME: make the following a function!!
+		
+	//	if (cr.getTask() != 0) {
+			query +=  scriptTaskQuery + " = " + cr.getTask();
 			tableCnt++;
-		}
-		if (cr.getServiceTask() != 0) {
+	//	}
+	//	if (cr.getServiceTask() != 0) {
 			if (tableCnt != 0)
 				query += andStr;
-			query += "t" + tableCnt + ".type = " + serviceTaskQuery + andStr
-					+ "t" + tableCnt + ".counter = " + cr.getServiceTask();
+			query +=  serviceTaskQuery + " = " + cr.getServiceTask();
 			tableCnt++;
-		}
-		if (cr.getCallActivity() != 0) {
-
-			if (tableCnt != 0)
-				query += andStr;
-			query += "t" + tableCnt + ".type = " + callActivityQuery + andStr
-					+ "t" + tableCnt + ".counter = " + cr.getCallActivity();
-			tableCnt++;
-		}
-		if (cr.getExclGateway() != 0) {
+	//	}
+	//	if (cr.getCallActivity() != 0) {
 
 			if (tableCnt != 0)
 				query += andStr;
-			query += "t" + tableCnt + ".type = " + exclGatewayQuery + andStr
-					+ "t" + tableCnt + ".counter = " + cr.getExclGateway();
+			query +=  callActivityQuery + " = " + cr.getCallActivity();
+		
 			tableCnt++;
-		}
-		if (cr.getParalGateway() != 0) {
+	//	}
+	//	if (cr.getExclGateway() != 0) {
 
 			if (tableCnt != 0)
 				query += andStr;
-			query += "t" + tableCnt + ".type = " + parallelGatewayQuery
-					+ andStr + "t" + tableCnt + ".counter = "
-					+ cr.getParalGateway();
+			query +=  exclGatewayQuery + " = " + cr.getExclGateway();
 			tableCnt++;
-		}
+		//}
+	//	if (cr.getParalGateway() != 0) {
 
+			if (tableCnt != 0)
+				query += andStr;
+				query +=  parallelGatewayQuery + " = " + cr.getParalGateway();
+				tableCnt++;
+	//	}
+//
 		if (fragmentPos == 0) {
 			query += andStr;
-			query += "f.hasStartEvent = 1 ";
+			query += "hasStartEvent = 1 "; //fixme: will have to add a start event if no existent
 			query += andStr;
-			query += " f.hasEndEvent = 0 ";
+			query += " hasEndEvent = 0 ";
 		} else if (fragmentPos == totalSize - 1) {
 			query += andStr;
-			query += " f.hasStartEvent = 0 ";
+			query += "hasStartEvent = 0 ";
 			// query += andStr; //this is omitted because we are not having many
 			// elements with endEvent and the selection fails
 			// query += " f.hasEndEvent = 1 ";
 		} else {
 			query += andStr;
-			query += "f.hasStartEvent = 0 AND f.hasEndEvent = 0 ";
-
+			query += "hasStartEvent = 0 AND hasEndEvent = 0 ";
 		}
-		query += "AND f.numberOfFlowNodes = " + size;
+	//	query += "AND numberOfFlowNodes >= " + size;
 		query += queryEnd;
 		return query;
 	}

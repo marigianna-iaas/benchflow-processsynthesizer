@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
-	<NumberOfExcetutions>100</NumberOfExcetutions>
+	<NumberOfExcetutions>1</NumberOfExcetutions>
 	<MinAllowedNumberOfNodes>5</MinAllowedNumberOfNodes>
 	<Experiments>
 		<!-- 2 criteria -->
-	  	<Experiment>
-			<NumberOfNodes>12</NumberOfNodes>
+	  	 	<Experiment>
+			<NumberOfNodes>19</NumberOfNodes>
 			<NumberOfCriteria>2</NumberOfCriteria>
-			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
-			</URI>
-			<ProcessEngine>Camunda</ProcessEngine>
-		</Experiment>
-		<Experiment>
-			<NumberOfNodes>16</NumberOfNodes>
-			<NumberOfCriteria>2</NumberOfCriteria>
-			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
-			</URI>
-			<ProcessEngine>Camunda</ProcessEngine>
-		</Experiment>
-		<Experiment>
-			<NumberOfNodes>18</NumberOfNodes>
-			<NumberOfCriteria>2</NumberOfCriteria>
-			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
+			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria.xml
 			</URI>
 			<ProcessEngine>Camunda</ProcessEngine>
 		</Experiment> 
-		<Experiment>
+	 	<Experiment>
+			 <NumberOfNodes>24</NumberOfNodes>
+					<NumberOfCriteria>3</NumberOfCriteria>
+					<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
+					</URI>
+					<ProcessEngine>Camunda</ProcessEngine>
+		</Experiment>   
+	<!-- 	<Experiment>
+			<NumberOfNodes>24</NumberOfNodes>
+			<NumberOfCriteria>3</NumberOfCriteria>
+			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria3.xml
+			</URI>
+			<ProcessEngine>Camunda</ProcessEngine>
+		</Experiment> -->
+	<!-- 	<Experiment>
 			<NumberOfNodes>20</NumberOfNodes>
 			<NumberOfCriteria>2</NumberOfCriteria>
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
@@ -52,9 +52,9 @@
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
 			</URI>
 			<ProcessEngine>Camunda</ProcessEngine>
-		</Experiment>
+		</Experiment> -->
 		<!-- 3 criteria -->
-  	 <Experiment>
+<!--   	 <Experiment>
 			<NumberOfNodes>18</NumberOfNodes>
 			<NumberOfCriteria>3</NumberOfCriteria>
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria3.xml
@@ -88,9 +88,9 @@
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria3.xml
 			</URI>
 			<ProcessEngine>Camunda</ProcessEngine>
-		</Experiment>
+		</Experiment> -->
 		<!-- 4 criteria -->
-	  	<Experiment>
+	<!--   	<Experiment>
 			<NumberOfNodes>24</NumberOfNodes>
 			<NumberOfCriteria>4</NumberOfCriteria>
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria4.xml
@@ -110,6 +110,6 @@
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria4.xml
 			</URI>
 			<ProcessEngine>Camunda</ProcessEngine>
-		</Experiment>
+		</Experiment>-->
 	</Experiments> 
 </Configuration>

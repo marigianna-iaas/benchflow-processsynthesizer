@@ -25,23 +25,32 @@ public class FragmentsCollection extends BpmnCollectionSingleton{
 			
 			File collectionFolder = new File(Constants.FragmentsDirectoryPath);
 			String[] listOfBpmnFiles = collectionFolder.list();
-
+			int cnt =0;
 			for (String bpmnFileName : listOfBpmnFiles) {
 				File bpmnFile = new File(collectionFolder.getAbsolutePath()
 						.toString() + File.separator+ bpmnFileName);
 				if (bpmnFile.isFile()) {
 					this.bpmnFilePaths.add(bpmnFile);
-					FragmentExt fragment = new FragmentExt(bpmnFile.getCanonicalPath());
-					if(fragment.getId() != null)
+					try{
+						FragmentExt fragment = new FragmentExt(bpmnFile.getCanonicalPath());
+						if(fragment.getId() != null)
+						{
+							insertFragmentsToDB(fragment);	
+							insertConnectionPointsToDB(fragment);
+						}
+					}
+					catch(Exception e)
 					{
-						insertFragmentsToDB(fragment);	
-						insertConnectionPointsToDB(fragment);
+						cnt++;
 					}
 				}
 
 			}
 
-
+			//todo: at the end implement an execution for this:  
+			//insert into `ConnectionPointsStats` (fid, type, counter)
+			//SELECT fid, type, count(type) as 'Counter' FROM `connectionPoints` group by type, fid order by fid
+			System.out.println(cnt + "problematic");
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Exception: "+ e.getMessage(), e);
 
@@ -54,28 +63,18 @@ public class FragmentsCollection extends BpmnCollectionSingleton{
 		return this.fragmentsCollection;
 	}
 
-	private int numberOfFlowNodes(FragmentExt fragment){
-		int number = 0;
-		for(org.eclipse.bpmn2.FlowElement f : fragment.getProcess().getFlowElements())
-		{
-			if(f instanceof FlowNode)
-			{
-				++number;
-			}
-		}
-		return number;
-	}
-	
+
 	public void insertFragmentsToDB(FragmentExt fragment) {
 		
 		
 		
-		String sql = "Insert into fragments(fid, filepath, hasStartEvent, hasEndEvent, numberOfFlowNodes) values(?,?,?,?,?)";
+		String sql = "Insert into fragments(fid, filepath, hasStartEvent, hasEndEvent, numberOfFlowNodes, numberOfExclusiveGateways, numberOfParallelGateways, numberOfScriptTasks,numberOfCallActivity, numberOfServiceTasks ) values(?,?,?,?,?,?,?,?,?,?)";
 
 			if(fragment.getIsValidFragment())
 			{	
 				//FIXME: SOS! make filePath relevant
-				Object[] values = {fragment.getId(),fragment.getFilePath(),fragment.getHasStartEvent(), fragment.getHasEndEvent(), numberOfFlowNodes(fragment)};
+				Object[] values = {fragment.getId(),fragment.getFilePath(),fragment.getHasStartEvent(), fragment.getHasEndEvent(), fragment.getNumberOfFlowNodes(), fragment.getNumberOfExclusiveGateways(),
+						fragment.getNumberOfParallelGateway(), fragment.getNumberOfScriptTasks(), fragment.getNumberOfCallActivity(), fragment.getNumberOfServiceTasks()};
 	
 				DBConnection connec= new DBConnection();
 				connec.insertData(sql, values);

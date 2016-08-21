@@ -2,7 +2,6 @@ package de.unistuttgart.iaas.newbpmnprocess.model;
 
 import java.io.File;
 import java.io.FileInputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,101 +37,122 @@ import de.unistuttgart.iaas.bpmn.util.CompareUtils;
 import de.unistuttgart.iaas.newbpmnprocess.database.DBConnection;
 import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
 
-
 /**
  * 
  * @author skourama
  *
  */
-//TODO: this model instance inheritance can be lifted? I believe it is only used for the process modeling
+// TODO: this model instance inheritance can be lifted? I believe it is only
+// used for the process modeling
 public class FragmentExt extends ModelInstance {
 
-	
 	private boolean hasStartEvent = false;
 	private boolean hasEndEvent = false;
-	private String id ; 
-	private int numberOfFlowNodes =0;
-	
+	private String id;
+	private int numberOfFlowNodes = 0;
+
 	private List<ConnectionPoint> connectionPoints;
 	private boolean isValidFragment;
-	private int incomingConnections =0 ;
+	private int incomingConnections = 0;
 	private int outgoingConnections = 0;
-	
-	//TODO: generalize these types to superclasses?
+
+	// TODO: generalize these types to superclasses?
 	private Collection<EClass> activityTypes = Arrays.asList(
-			Bpmn2Package.Literals.CALL_ACTIVITY, Bpmn2Package.Literals.SCRIPT_TASK, Bpmn2Package.Literals.SERVICE_TASK);
-	
-	//TODO: generalize these types to superclasses?
+			Bpmn2Package.Literals.CALL_ACTIVITY,
+			Bpmn2Package.Literals.SCRIPT_TASK,
+			Bpmn2Package.Literals.SERVICE_TASK);
+
+	// TODO: generalize these types to superclasses?
 	private Collection<EClass> gatewayTypes = Arrays.asList(
-			Bpmn2Package.Literals.EXCLUSIVE_GATEWAY, Bpmn2Package.Literals.PARALLEL_GATEWAY);
+			Bpmn2Package.Literals.EXCLUSIVE_GATEWAY,
+			Bpmn2Package.Literals.PARALLEL_GATEWAY);
 	private List<FragmentExt> failMatches = new ArrayList<FragmentExt>();
-	
+	private int numberOfParallelGateways = 0;
+	private int numberOfScriptTasks = 0;
+	private int numberOfCallActivities = 0;
+	private int numberOfExclusiveGateways = 0;
+	private int numberOfServiceTasks = 0;
+	private int numberOfInclusiveGateways;
 
 	/**
 	 * Load fragment from file
+	 * 
 	 * @param modelFileURI
 	 */
-	public FragmentExt(String modelFileURI)
-	{ 
+	public FragmentExt(String modelFileURI) {
 		super(modelFileURI);
+		this.filePath = modelFileURI;
+
 		this.id = calculateId();
-		if(id!= null)
-		{
-			hasStartEvent  = hasEventType(Arrays.asList(
-					Bpmn2Package.Literals.START_EVENT), Constants.BpmnStartEventElement);
-			hasEndEvent = hasEventType(Arrays.asList(
-					Bpmn2Package.Literals.END_EVENT), Constants.BpmnEndEventElement);
-			connectionPoints = new ArrayList<ConnectionPoint>();
+		if (id != null) {
 			
+			hasStartEvent = hasEventType(
+					Arrays.asList(Bpmn2Package.Literals.START_EVENT),
+					Constants.BpmnStartEventElement);
+			hasEndEvent = hasEventType(
+					Arrays.asList(Bpmn2Package.Literals.END_EVENT),
+					Constants.BpmnEndEventElement);
+			connectionPoints = new ArrayList<ConnectionPoint>();
+
 			this.connectionPoints = calculateFragmentMetadata(id);
+			fixNumberOfFlowNodes();
 			fixFragmentsConnections();
 			isValidFragment = checkIfValidFragment();
 		}
-		
+
 	}
-	
+
 	/**
 	 * For loading a fragment back from the db
+	 * 
 	 * @param fid
 	 * @param modelFileURI
 	 * @param hasStartEvent
 	 * @param hasEndEvent
 	 * @param connectionPoints
 	 */
-	public FragmentExt(String fid, String modelFileURI, boolean hasStartEvent, boolean hasEndEvent, int numberOfFlowNodes){
-		//FIXME: there should be a local folder of files with the fragments!!!
-		super(modelFileURI);	
+	public FragmentExt(String fid, String modelFileURI, boolean hasStartEvent,
+			boolean hasEndEvent, int numberOfFlowNodes, int numberOfCallActivities, 
+			int numberOfScriptTasks, int numberOfServiceTasks, int numberOfParallelGateways,int numberOfExclusiveGateways ) {
+		// FIXME: there should be a local folder of files with the fragments!!!
+		super(modelFileURI);
 		this.id = fid;
 		this.filePath = modelFileURI;
 		this.hasStartEvent = hasStartEvent;
 		this.hasEndEvent = hasEndEvent;
 		this.connectionPoints = discoverConnectionPointsFromDB(fid);
 		this.numberOfFlowNodes = numberOfFlowNodes;
+		this.numberOfCallActivities = numberOfCallActivities;
+		this.numberOfScriptTasks = numberOfScriptTasks;
+		this.numberOfServiceTasks = numberOfServiceTasks;
+		this.numberOfParallelGateways = numberOfParallelGateways;
+		this.numberOfExclusiveGateways = numberOfExclusiveGateways;
 		fixFragmentsConnections();
 		isValidFragment = checkIfValidFragment();
 
 	}
 
-
 	/**
-	 * Check if it has Event type and in this case we should also implement the eligibility check
+	 * Check if it has Event type and in this case we should also implement the
+	 * eligibility check
+	 * 
 	 * @param event
 	 * @param eventImplName
 	 * @return
 	 */
 	private boolean hasEventType(Collection<EClass> event, String eventImplName) {
-		//parsing fragment file and saving events information in the java object
+		// parsing fragment file and saving events information in the java
+		// object
 		for (TreeIterator<EObject> iterator = CompareUtils
 				.getAllContentsWithSpecificTypes(process, event, true); iterator
 				.hasNext();) {
-			
+
 			EObject current = iterator.next();
 			if (current instanceof FlowNode) {
 				FlowNode node = (FlowNode) current;
 
-				if(node.getClass().getSimpleName().matches(eventImplName))
-				{
-					 return true;
+				if (node.getClass().getSimpleName().matches(eventImplName)) {
+					return true;
 				}
 
 			}
@@ -140,18 +160,18 @@ public class FragmentExt extends ModelInstance {
 		return false;
 	}
 
-	//TODO: remove the valid fragment concept
-	//TODO: add a start-v
+	// TODO: remove the valid fragment concept
+	// TODO: add a start-v
 	/**
-	 * A fragment is invalid if it has Start and incoming open connections or End Event and outgoing connections
+	 * A fragment is invalid if it has Start and incoming open connections or
+	 * End Event and outgoing connections
+	 * 
 	 * @param node
 	 * @param eventImplName
-	 * @return 
+	 * @return
 	 */
-	private boolean checkIfValidFragment()
-	{
-		if(this.hasStartEvent && this.incomingConnections != 0)
-		{
+	private boolean checkIfValidFragment() {
+		if (this.hasStartEvent && this.incomingConnections != 0) {
 			return false;
 		}
 		return true;
@@ -160,7 +180,6 @@ public class FragmentExt extends ModelInstance {
 	public boolean getHasStartEvent() {
 		return hasStartEvent;
 	}
-
 
 	public boolean getHasEndEvent() {
 		return hasEndEvent;
@@ -174,218 +193,208 @@ public class FragmentExt extends ModelInstance {
 		this.connectionPoints = connectionPoints;
 	}
 
-	public boolean getIsValidFragment()
-	{
+	public boolean getIsValidFragment() {
 		return isValidFragment;
 	}
-	
+
 	/**
-	 * This function bases on the assumption that the fragment files are named after 
-	 * path/fragment+UUID+.bpmn.
-	 * by removing the path the 8 the position of the "fragment" and 5 the position of ".bpmn2". we take the string in the middle 
-	 * @return  uuid of the fragment
+	 * This function bases on the assumption that the fragment files are named
+	 * after path/fragment+UUID+.bpmn. by removing the path the 8 the position
+	 * of the "fragment" and 5 the position of ".bpmn2". we take the string in
+	 * the middle
+	 * 
+	 * @return uuid of the fragment
 	 */
 	private String calculateId() {
-		if(this.filePath.contains("fragment"))
-		{
+		if (this.filePath.contains("fragment")) {
 			String[] splittedFilepath = this.filePath.split("/");
-			String filename = splittedFilepath[splittedFilepath.length -1];
-	 		String uuid = filename.substring(8, filename.length() - 6);	
+			String filename = splittedFilepath[splittedFilepath.length - 1];
+			String uuid = filename.substring(8, filename.length() - 6);
 			return uuid;
 		}
 		return null;
 	}
-	
 
-	public String getId()
-	{
+	public String getId() {
 		return id;
 	}
 
 	/**
-	 * Returns the list of activities/tasks after scanning them per type to find out the open connections
+	 * Returns the list of activities/tasks after scanning them per type to find
+	 * out the open connections
+	 * 
 	 * @param Process
-	 * @return 
-	 * @throws IOException 
-	 * @throws DroolsParserException 
+	 * @return
+	 * @throws IOException
+	 * @throws DroolsParserException
 	 */
-	protected List<ConnectionPoint> scanActivities (Process prcs, String fid) throws DroolsParserException, IOException
-	{
+	protected List<ConnectionPoint> scanActivities(Process prcs, String fid)
+			throws DroolsParserException, IOException {
 		for (TreeIterator<EObject> iterator = CompareUtils
 				.getAllContentsWithSpecificTypes(process, activityTypes, true); iterator
 				.hasNext();) {
-			
+
 			EObject curr = iterator.next();
 			if (curr instanceof FlowNode) {
 				FlowNode node = (FlowNode) curr;
-				ConnectionPoint connP = new ConnectionPoint(fid, node.getClass().getSimpleName().toString(),  node);
+				ConnectionPoint connP = new ConnectionPoint(fid, node
+						.getClass().getSimpleName().toString(), node);
 				executeActivityRules(node, connP);
-				if (connP.isValidConnectionPoint()) 
-				{
+				if (connP.isValidConnectionPoint()) {
 					connectionPoints.add(connP);
 				}
 			}
 		}
 		return connectionPoints;
 	}
-	
-	
-	protected void executeActivityRules( FlowNode node, ConnectionPoint connP) throws DroolsParserException, IOException {
-		 
+
+	protected void executeActivityRules(FlowNode node, ConnectionPoint connP)
+			throws DroolsParserException, IOException {
+
 		PackageBuilder packageBuilder = new PackageBuilder();
-		
-		//Convert rule file to InputStream
-		InputStream resourceAsStream = new FileInputStream(Constants.activitiesRulebookPath);
-		
+
+		// Convert rule file to InputStream
+		InputStream resourceAsStream = new FileInputStream(
+				Constants.activitiesRulebookPath);
+
 		Reader reader = new InputStreamReader(resourceAsStream);
 		packageBuilder.addPackageFromDrl(reader);
-		org.drools.core.rule.Package rulesPackage = packageBuilder
-				.getPackage();
+		org.drools.core.rule.Package rulesPackage = packageBuilder.getPackage();
 		RuleBase ruleBase = RuleBaseFactory.newRuleBase();
 		ruleBase.addPackage(rulesPackage);
-		//Create new WorkingMemory session for this RuleBase. By default the RuleBase retains a weak reference to returned WorkingMemory
+		// Create new WorkingMemory session for this RuleBase. By default the
+		// RuleBase retains a weak reference to returned WorkingMemory
 		WorkingMemory workingMemory = ruleBase.newStatefulSession();
 
-		//Insert and fire all rules until its empty
+		// Insert and fire all rules until its empty
 		workingMemory.insert(node);
 		workingMemory.insert(connP);
 		workingMemory.fireAllRules();
 	}
-	
+
 	/**
-	 * Return the list of gateways after scanning gateways etc in a way to find out if they require any additional connection
+	 * Return the list of gateways after scanning gateways etc in a way to find
+	 * out if they require any additional connection
+	 * 
 	 * @param Process
-	 * @return 
-	 * @throws IOException 
-	 * @throws DroolsParserException 
+	 * @return
+	 * @throws IOException
+	 * @throws DroolsParserException
 	 */
-	protected List<ConnectionPoint> scanGateways(Process prcs, String fid) throws DroolsParserException, IOException
-	{
+	protected List<ConnectionPoint> scanGateways(Process prcs, String fid)
+			throws DroolsParserException, IOException {
 		for (TreeIterator<EObject> iterator = CompareUtils
 				.getAllContentsWithSpecificTypes(process, gatewayTypes, true); iterator
 				.hasNext();) {
-			
 
 			EObject current = iterator.next();
 			if (current instanceof FlowNode) {
 				FlowNode node = (FlowNode) current;
-				ConnectionPoint connP  = new ConnectionPoint(fid, node.getClass().getSimpleName().toString(), node);
+				ConnectionPoint connP = new ConnectionPoint(fid, node
+						.getClass().getSimpleName().toString(), node);
 				executeGatewaysRules(node, connP);
 
-				if (connP.isValidConnectionPoint()) 
-				{
+				if (connP.isValidConnectionPoint()) {
 					connectionPoints.add(connP);
 				}
 			}
 		}
 		return connectionPoints;
 	}
-	
+
 	/**
-	 * Evaluates the open connections of each gateway 
-	 * @param node 
+	 * Evaluates the open connections of each gateway
+	 * 
+	 * @param node
 	 * @param node
 	 * @param obj
 	 * @throws DroolsParserException
 	 * @throws IOException
 	 */
-	protected void executeGatewaysRules(FlowNode node, ConnectionPoint connP) throws DroolsParserException, IOException {
-		if(node.getIncoming().size()==1 && node.getOutgoing().size()>=2)
-		{
+	protected void executeGatewaysRules(FlowNode node, ConnectionPoint connP)
+			throws DroolsParserException, IOException {
+		if (node.getIncoming().size() == 1 && node.getOutgoing().size() >= 2) {
 			connP.setNeededIncoming(0);
 			connP.setNeededOutgoing(0);
-		}
-		else if(node.getIncoming().size()>=2 && node.getOutgoing().size()==1)
-		{
+		} else if (node.getIncoming().size() >= 2
+				&& node.getOutgoing().size() == 1) {
 			connP.setNeededIncoming(0);
 			connP.setNeededOutgoing(0);
-		}
-		else if(node.getIncoming().size()<1 && node.getOutgoing().size()>=2)
-		{
+		} else if (node.getIncoming().size() < 1
+				&& node.getOutgoing().size() >= 2) {
 			connP.setNeededIncoming(1);
 			connP.setNeededOutgoing(0);
-		}
-		else if(node.getIncoming().size()>=2 && node.getOutgoing().size()<1)
-		{
+		} else if (node.getIncoming().size() >= 2
+				&& node.getOutgoing().size() < 1) {
 			connP.setNeededOutgoing(1);
 			connP.setNeededIncoming(0);
-		}
-		else if(node.getIncoming().size()==1 && node.getOutgoing().size()<1)
-		{
+		} else if (node.getIncoming().size() == 1
+				&& node.getOutgoing().size() < 1) {
 			connP.setNeededOutgoing(2);
 			connP.setNeededIncoming(0);
-		}
-		else if(node.getIncoming().size()<1 && node.getOutgoing().size()==1)
-		{
+		} else if (node.getIncoming().size() < 1
+				&& node.getOutgoing().size() == 1) {
 			connP.setNeededIncoming(2);
 			connP.setNeededOutgoing(0);
-		}
-		else if(node.getIncoming().size()==1 && node.getOutgoing().size()==1)
-		{
-			//here we are reducing the probability to create an invalid fragment
-			//and most probably increase connectivity
-			if(this.hasStartEvent && !this.hasEndEvent)
-			{
+		} else if (node.getIncoming().size() == 1
+				&& node.getOutgoing().size() == 1) {
+			// here we are reducing the probability to create an invalid
+			// fragment
+			// and most probably increase connectivity
+			if (this.hasStartEvent && !this.hasEndEvent) {
 				connP.setNeededOutgoing(1);
 				connP.setNeededIncoming(0);
-			}
-			else if(this.hasEndEvent && !this.hasStartEvent)
-			{
+			} else if (this.hasEndEvent && !this.hasStartEvent) {
 				connP.setNeededIncoming(1);
 				connP.setNeededOutgoing(0);
 
-			}
-			else 
-			{
-				//creates incoming or outgoing connection randomly
-				//TODO: can it get smarter?
+			} else {
+				// creates incoming or outgoing connection randomly
+				// TODO: can it get smarter?
 				Random random = new Random();
-				if(random.nextBoolean()) connP.setNeededIncoming(1);
-				else 
-				{
-					connP.setNeededOutgoing(1); 
+				if (random.nextBoolean())
+					connP.setNeededIncoming(1);
+				else {
+					connP.setNeededOutgoing(1);
 					connP.setNeededIncoming(0);
 				}
-				
+
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * It reads each model in the collection and applies the rules to create the metadata
-	 * @param fid 
-	 * @return 
+	 * It reads each model in the collection and applies the rules to create the
+	 * metadata
+	 * 
+	 * @param fid
+	 * @return
 	 * @throws DroolsParserException
 	 * @throws IOException
 	 */
-	protected List<ConnectionPoint> calculateFragmentMetadata(String fid) 
-	{
-		try{	
-			//will do the procedures if the fragment is valid for the DB otherwise it is skipped
-			this.connectionPoints = scanActivities(this.discoverProcesses().get(0), fid);
-			this.connectionPoints = scanGateways(this.discoverProcesses().get(0), fid);
-		
-		}
-		catch (DroolsParserException e)
-		{
+	protected List<ConnectionPoint> calculateFragmentMetadata(String fid) {
+		try {
+			// will do the procedures if the fragment is valid for the DB
+			// otherwise it is skipped
+			this.connectionPoints = scanActivities(this.discoverProcesses()
+					.get(0), fid);
+			this.connectionPoints = scanGateways(this.discoverProcesses()
+					.get(0), fid);
+
+		} catch (DroolsParserException e) {
 			e.printStackTrace();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return connectionPoints;
 	}
-	
-	
+
 	public int getIncomingConnections() {
 		return incomingConnections;
 	}
 
 	public void fixFragmentsConnections() {
-		for(ConnectionPoint connectionPoint : connectionPoints)
-		{
+		for (ConnectionPoint connectionPoint : connectionPoints) {
 			this.incomingConnections += connectionPoint.getNeededIncoming();
 			this.outgoingConnections += connectionPoint.getNeededOutgoing();
 		}
@@ -395,15 +404,13 @@ public class FragmentExt extends ModelInstance {
 		return outgoingConnections;
 	}
 
-
 	public boolean hasNoFailMatched(FragmentExt fragment) {
 		return this.failMatches.contains(fragment);
-	
+
 	}
-	
-	public void addCombinationFailMatches(List<FragmentExt> combination)
-	{
-		 this.failMatches.addAll(combination);
+
+	public void addCombinationFailMatches(List<FragmentExt> combination) {
+		this.failMatches.addAll(combination);
 	}
 
 	public List<ConnectionPoint> discoverConnectionPointsFromDB(String fid) {
@@ -421,10 +428,9 @@ public class FragmentExt extends ModelInstance {
 				int outgoing = resultConnectionPoints.getInt("outgoing");
 				String nodeId = resultConnectionPoints.getString("nodeId");
 				FlowNode node = findFlowNodeInFragment(nodeId);
-				if(node!= null)
-				{
-					ConnectionPoint cp = new ConnectionPoint(fid, type, incoming,
-							outgoing, node);
+				if (node != null) {
+					ConnectionPoint cp = new ConnectionPoint(fid, type,
+							incoming, outgoing, node);
 					connectionPoints.add(cp);
 				}
 			}
@@ -437,26 +443,24 @@ public class FragmentExt extends ModelInstance {
 			return null;
 		}
 	}
-	
-	//FIXME: implement this
+
 	public FlowNode findFlowNodeInFragment(String nodeId) {
 
 		List<FlowElement> flowElements = this.getProcess().getFlowElements();
-		for(FlowElement f : flowElements)
-		{
-			if(f instanceof FlowNode)
-			{
-				if(f.getId().equals(nodeId)) return (FlowNode) f;
+		for (FlowElement f : flowElements) {
+			if (f instanceof FlowNode) {
+				if (f.getId().equals(nodeId))
+					return (FlowNode) f;
 			}
 		}
 		return null;
 	}
-	
-	public Document getXMLDocumentOfFragment()
-	{
+
+	public Document getXMLDocumentOfFragment() {
 		DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
 		try {
-			return fact.newDocumentBuilder().parse(new File(this.getFilePath()));
+			return fact.newDocumentBuilder()
+					.parse(new File(this.getFilePath()));
 		} catch (SAXException e) {
 			e.printStackTrace();
 			return null;
@@ -468,9 +472,53 @@ public class FragmentExt extends ModelInstance {
 			return null;
 		}
 	}
-	
+
 	public int getNumberOfFlowNodes() {
 		return numberOfFlowNodes;
 	}
 
+	public int getNumberOfParallelGateway() {
+		return numberOfParallelGateways;
+	}
+
+	public int getNumberOfScriptTasks() {
+		return numberOfScriptTasks;
+	}
+
+	public int getNumberOfCallActivity() {
+		return numberOfCallActivities;
+	}
+
+	public int getNumberOfExclusiveGateways() {
+		return numberOfExclusiveGateways;
+	}
+
+	public Object getNumberOfServiceTasks() {
+		return numberOfServiceTasks;
+	}
+	
+
+	private void fixNumberOfFlowNodes() {
+		for (org.eclipse.bpmn2.FlowElement f : this.getProcess()
+				.getFlowElements()) {
+			if (f instanceof FlowNode) {
+
+				++numberOfFlowNodes;
+				FlowNode node = (FlowNode) f;
+				String nodeClassStr = node.getClass().getSimpleName()
+						.toString();
+				if (nodeClassStr.equals("ExclusiveGatewayImpl")) {
+					numberOfExclusiveGateways++;
+				} else if (nodeClassStr.equals("ParallelGatewayImpl")) {
+					numberOfParallelGateways++;
+				} else if (nodeClassStr.equals("ScriptTaskImpl") || nodeClassStr.equals("TaskImpl")) {
+					numberOfScriptTasks++;
+				} else if (nodeClassStr.equals("CallActivityImpl")) {
+					numberOfCallActivities++;
+				} else if (nodeClassStr.equals("ServiceTaskImpl")) {
+					numberOfServiceTasks++;
+				}
+			}
+		}
+	}
 }
