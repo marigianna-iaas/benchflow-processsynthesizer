@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import org.eclipse.bpmn2.FlowNode;
 import de.unistuttgart.iaas.bpmn.collection.BpmnCollectionSingleton;
 import de.unistuttgart.iaas.newbpmnprocess.database.DBConnection;
 import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
@@ -46,10 +45,6 @@ public class FragmentsCollection extends BpmnCollectionSingleton{
 				}
 
 			}
-
-			//todo: at the end implement an execution for this:  
-			//insert into `ConnectionPointsStats` (fid, type, counter)
-			//SELECT fid, type, count(type) as 'Counter' FROM `connectionPoints` group by type, fid order by fid
 			System.out.println(cnt + "problematic");
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Exception: "+ e.getMessage(), e);

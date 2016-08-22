@@ -3,8 +3,7 @@
 <Criteria xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com CriteriaSchema.xsd">
 
   <fragments>
-
-  <fragment>
+      <fragment>
 
       <DetailActivities>
 
@@ -21,7 +20,6 @@
      <ParallelGateways>1</ParallelGateways>
 
     </fragment>
-
 	<fragment>
 
       <DetailActivities>
@@ -56,6 +54,7 @@
       <ParallelGateways>0</ParallelGateways>
 
     </fragment>
+
     </fragments>
   <SynthesizedProcess>
 

@@ -1,5 +1,10 @@
 package de.unistuttgart.iaas.newbpmnprocess.criteria;
 
+/**
+ * Reads the criterio - extend this to support more types?
+ * @author skourama
+ *
+ */
 public class Criterio {
 	
 	private boolean ActDetails;

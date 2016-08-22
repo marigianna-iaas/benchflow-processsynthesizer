@@ -6,7 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="UserCriteriaThesis"/>
 	<classpathentry kind="lib" path="/home/skourama/workspace/processsynthesis/libs/org.eclipse.emf.common_2.10.1.v20140901-1043.jar"/>
 	<classpathentry kind="lib" path="/home/skourama/workspace/processsynthesis/libs/org.eclipse.emf.compare_3.1.0.201406111328.jar"/>
 	<classpathentry kind="lib" path="/home/skourama/workspace/processsynthesis/libs/org.eclipse.emf.ecore.xmi_2.10.1.v20140901-1043.jar"/>

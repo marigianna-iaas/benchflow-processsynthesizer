@@ -7,52 +7,62 @@ import org.w3c.dom.Document;
 import de.unistuttgart.iaas.newbpmnprocess.model.ConnectionPoint;
 import de.unistuttgart.iaas.newbpmnprocess.model.FragmentExt;
 
+/**
+ * Contains all functions for synthesizing a new process
+ * @author skourama
+ *
+ */
 public class NewProcessComposer {
 
-	public static String composeNewProcess(List<List<FragmentExt>> selectedFragments,  int totalNumberOfFlowNodes)
+	/**
+	 * Drives the process model synthesizing
+	 * @param selectedFragments - the fragments selected from the DB
+	 * @return Filepath if the process was created or null if it was unsuccessfull
+	 */
+	public static String composeNewProcess(List<List<FragmentExt>> selectedFragments)
 	{	
 		String newProcessFileName = null;
 		if(selectedFragments.size() < 2) { 
-			System.out.println("Not enough fragments for synthesizing"); 
+			System.err.println("Not enough fragments for synthesizing"); 
 			return null;
 		}
-		//Indeces indecesToSynthesize = getIndecesOfFragmentsToCompose(selectedFragments,new Indeces(selectedFragments.size()), totalNumberOfFlowNodes);
-		Indeces2 indecesToSynthesize = getIndecesOfFragmentsToCompose(selectedFragments,new Indeces2(selectedFragments.size()), totalNumberOfFlowNodes);
+		//from the indeces to synthesize I am basically only interested in the memory
+		//the memory contains the combination that can be linked
+		LinkableFragmentsMemory linkableFragmentsMemory = getIndecesOfFragmentsToCompose(selectedFragments,new Indeces(), new LinkableFragmentsMemory(selectedFragments.size()));
 	
-		if(indecesToSynthesize == null || indecesToSynthesize.memoryIsEmpty()) {
-			System.out.println("The fragments responding to these criteria could not be linked."
+		if(linkableFragmentsMemory == null || linkableFragmentsMemory.memoryIsEmpty()) {
+			System.err.println("The fragments responding to these criteria could not be linked."
 								+"\n Change the criteria and try again");
 			return null;
 		}
 		else{	
 			 List<FragmentExt> fragmentsToSynthesize = 
-					getFragmentsToSynthesize(selectedFragments, indecesToSynthesize.getMemory());
-				
-			 newProcessFileName = linkFragments(fragmentsToSynthesize);	
-			
+					getFragmentsToSynthesize(selectedFragments, linkableFragmentsMemory.getMemory());
+			 newProcessFileName = linkFragments(fragmentsToSynthesize);
 		}
 		return newProcessFileName;
 	}
 	
 
 	/**
-	 * Returns fragments to synthesize
-	 * @param selectedFragments
-	 * @param indecesToSynthesize
+	 * The memory only has the pointers to the fragments to syntehsize
+	 * This function will find and return the appropriate fragments
+	 * @param selectedFragments - the fragments selected from the DB
+	 * @param indecesOfFragmentsToSynthesize - basically the returned memory
 	 * @return
 	 */
 	private static List<FragmentExt> getFragmentsToSynthesize(
 			List<List<FragmentExt>> selectedFragments,
-			int[] indecesToSynthesize) {
+			int[] indecesOfFragmentsToSynthesize) {
 		List<FragmentExt> fragmentsToSynthesize = new ArrayList<FragmentExt>();
 	
-		for(int i=0; i < indecesToSynthesize.length; i++)
+		for(int i=0; i < indecesOfFragmentsToSynthesize.length; i++)
 		{
-			int index = indecesToSynthesize[i];
+			int index = indecesOfFragmentsToSynthesize[i];
 			List<FragmentExt> childList = selectedFragments.get(i);
 			childList.get(index);
 			
-			FragmentExt fragment = selectedFragments.get(i).get(indecesToSynthesize[i]);
+			FragmentExt fragment = selectedFragments.get(i).get(indecesOfFragmentsToSynthesize[i]);
 			fragment.loadProcess(fragment.getFilePath());
 			fragmentsToSynthesize.add(fragment);
 		}
@@ -68,92 +78,30 @@ public class NewProcessComposer {
 	 */
 	//TODO: this method can be improved a lot concerning the constraints of smartly selecting fragments
 	//TODO: would a rule engine be in use?
-//	private static Indeces getIndecesOfFragmentsToCompose(List<List<FragmentExt>> selectedFragments,  Indeces indeces, int totalNumberOfFlowNodes)
-//	{
-//			while(indeces.getNextFragmentlistsIndex() < selectedFragments.size() && indeces.getFragmentlistsIndex() != -1)	// size -1 because we are pairing i-1 with last row
-//			{
-//	 			List<FragmentExt> parentList = selectedFragments.get(indeces.getFragmentlistsIndex());
-//	 			List<FragmentExt> childList = selectedFragments.get(indeces.getNextFragmentlistsIndex());
-//	 			
-//	 			outerLoop:
-//	 			while( indeces.getFragment1Index() < parentList.size())
-//	 			{
-//	 				FragmentExt fragment1 = parentList.get( indeces.getFragment1Index());
-//	 				while(indeces.getFragment2Index() < childList.size())
-//	 				{
-//	 					FragmentExt fragment2 = childList.get(indeces.getFragment2Index()); //gets from the position of fragment2Index 
-//	 					if(checkLinkingCompatibility(fragment1, fragment2)) //check middle fragments for start-end event here
-//	 					{
-//	 						indeces.addToMemory(indeces.getFragmentlistsIndex(), indeces.getFragment1Index());
-//	 						indeces.addToMemory(indeces.getNextFragmentlistsIndex(), indeces.getFragment2Index());
-//	 						indeces.setIndeces(indeces.getNextFragmentlistsIndex(), indeces.getFragment2Index(), 0);
-//	 						parentList = selectedFragments.get(indeces.getFragmentlistsIndex());
-//	 			 			childList = selectedFragments.get(indeces.getNextFragmentlistsIndex());
-//	 						break outerLoop;
-//	 					}
-//	 					indeces.setFragment2Index(indeces.getNextFragment2Index());
-//
-//	 				}	
-//	 					
-//	 				//finished list 2 without finding a matching
-//	
-//	 				if(indeces.getFragment2Index() == childList.size())
-//	 				{
-//	 					//if the current list is the first just proceed by taking the next element with the beginning of the second list
-//	 					if(indeces.getFragmentlistsIndex()== 0)
-//	 					{
-//		 					indeces.setIndeces(indeces.getFragmentlistsIndex(), indeces.getNextFragment1Index(), 0);
-//		 					if(indeces.getFragment1Index() >= parentList.size()) //elements of list 0 finished unsuccessfully
-//		 					{
-//		 						return indeces;
-//		 					}
-//
-//	 					}
-//	 					//else if it is not the first list. then you have to go one list back
-//	 					//and take the current index with the next element of the second list
-//	 					//otherwise it will lose connection
-//	 					else{
-////	 						int newParentListIndex = indeces.getFragment1Index() == 0 ? 0 : indeces.getFragment1Index() - 1;
-////	 						int newChildListIndex = indeces.getFragment2Index() == 1 ? 1 : indeces.getFragment2Index() - 1;
-////	 						
-////	 						indeces.setIndeces(newParentListIndex, indeces.getMemoryElement(indeces.getPrevFragmentlistsIndex())+1, 
-////	 						
-//	 						indeces.setIndeces(indeces.getPrevFragmentlistsIndex(), indeces.getMemoryElement(indeces.getPrevFragmentlistsIndex()), indeces.getNextFragment2Index());
-//	 						indeces.rewindMemory(indeces.getNextFragmentlistsIndex());	//which is basically from the current list on. Erase all the entries
-//	 						getIndecesOfFragmentsToCompose(selectedFragments, indeces, totalNumberOfFlowNodes);
-//	 					}
-//	 					
-//	 				}
-//	 			}	
-//			}
-//			
-//			return indeces; 
-//	}
-	private static Indeces2 getIndecesOfFragmentsToCompose(List<List<FragmentExt>> selectedFragments,  Indeces2 indeces, int totalNumberOfFlowNodes)
+	private static LinkableFragmentsMemory getIndecesOfFragmentsToCompose(List<List<FragmentExt>> selectedFragments,  Indeces indeces, LinkableFragmentsMemory successfullFragmentsMemory)
 	{
 			if(indeces.getNextParentRow() < selectedFragments.size() && indeces.getParentRow() != -1)	// size -1 because we are pairing i-1 with last row
 			{
 	 			List<FragmentExt> parentList = selectedFragments.get(indeces.getParentRow());
 	 			List<FragmentExt> childList = selectedFragments.get(indeces.getNextParentRow());
 	 			
-	 			//outerLoop:
 	 			while(indeces.getParentColumn() < parentList.size())
 	 			{
-	 				FragmentExt fragment1 = parentList.get( indeces.getParentColumn());
+	 				FragmentExt parentFragment = parentList.get( indeces.getParentColumn());
 	 				while(indeces.getChildColumn() < childList.size())
 	 				{
-	 					FragmentExt fragment2 = childList.get(indeces.getChildColumn()); //gets from the position of fragment2Index 
-	 					if(checkLinkingCompatibility(fragment1, fragment2)) //check middle fragments for start-end event here
+	 					FragmentExt childFragment = childList.get(indeces.getChildColumn()); //gets from the position of fragment2Index 
+	 					if(checkLinkingCompatibility(parentFragment, childFragment)) //check middle fragments for start-end event here
 	 					{
 	 						//INVESTIGATE: do we need to execute the following line before this statement?
-	 						indeces.addToMemory(indeces.getParentRow(), indeces.getParentColumn());
+	 						successfullFragmentsMemory.addToMemory(indeces.getParentRow(), indeces.getParentColumn());
 	 						if(indeces.getNextParentRow() == selectedFragments.size())
 	 						{
-	 							return indeces;
+	 							return successfullFragmentsMemory;
 	 						}
-	 						indeces.addToMemory(indeces.getNextParentRow(), indeces.getChildColumn());
+	 						successfullFragmentsMemory.addToMemory(indeces.getNextParentRow(), indeces.getChildColumn());
 	 						indeces.setIndeces(indeces.getNextParentRow(), indeces.getChildColumn(), 0);
-	 			 			getIndecesOfFragmentsToCompose(selectedFragments, indeces, totalNumberOfFlowNodes);
+	 			 			getIndecesOfFragmentsToCompose(selectedFragments, indeces, successfullFragmentsMemory);
 	 					}
 	 					indeces.setChildColumn(indeces.getNextChildColumn());
 
@@ -161,9 +109,7 @@ public class NewProcessComposer {
 	 					
 	 				//finished list 2 without finding a matching
 	
-	 			//	if(indeces.getChildColumn() == childList.size())
-	 			//	{
-	 					//if the current list is the first just proceed by taking the next element with the beginning of the second list
+	 				//if the current list is the first just proceed by taking the next element with the beginning of the second list
 	 					if(indeces.getParentRow()== 0)
 	 					{
 		 					indeces.setIndeces(indeces.getParentRow(), indeces.getNextParentColumn(), 0);
@@ -177,91 +123,89 @@ public class NewProcessComposer {
 	 					//and take the current index with the next element of the second list
 	 					//otherwise it will lose connection
 	 					else{
-//	 						//public void setIndeces(int parentRow, int parentColumn, int childColumn)
-	 						indeces.setIndeces(indeces.getPrevParentRow(), indeces.getMemoryElement(indeces.getPrevParentRow()), indeces.getNextChildColumn());
-	 						indeces.rewindMemory(indeces.getNextParentRow());	//which is basically from the current list on. Erase all the entries
-	 						getIndecesOfFragmentsToCompose(selectedFragments, indeces, totalNumberOfFlowNodes);
+	 						indeces.setIndeces(indeces.getPrevParentRow(), successfullFragmentsMemory.getMemoryElement(indeces.getPrevParentRow()), indeces.getNextChildColumn());
+	 						successfullFragmentsMemory.rewindMemory(indeces.getNextParentRow());	//which is basically from the current list on. Erase all the entries
+	 						getIndecesOfFragmentsToCompose(selectedFragments, indeces, successfullFragmentsMemory);
 	 					}
 	 					
-	 				//}
 	 			}	
 			}
-			
-			return indeces; 
+			return successfullFragmentsMemory; 
 	}
 	
 
 	/**
 	 * Checks compatibility between two fragments
 	 * if they have the same amound of connections 
-	 * 
+	 * TODO: see if this compatibility can be extended to avoid deadlocks?
 	 */
-	private static boolean checkLinkingCompatibility(FragmentExt fragment1, FragmentExt fragment2) {
+	private static boolean checkLinkingCompatibility(FragmentExt parentFragment, FragmentExt childFragment) {
 		
-		if(fragment1.getOutgoingConnections() != 0 && fragment2.getIncomingConnections() !=0)
-			return (fragment1.getOutgoingConnections() == fragment2.getIncomingConnections()) ;
+		if(parentFragment.getOutgoingConnections() != 0 && childFragment.getIncomingConnections() !=0)
+			return (parentFragment.getOutgoingConnections() == childFragment.getIncomingConnections()) ;
 		else
 			return false;
 	}
 	
 
 
-
+	/**
+	 * Links the fragments together
+	 * TODO: write clearer?
+	 * @param fragmentsToSynthesize
+	 * @return
+	 */
 	private static String linkFragments(List<FragmentExt> fragmentsToSynthesize)
 	{
 	  	int index = 0;
-	  
 		ProcessXMLEditor processEditor = new ProcessXMLEditor();
 		Document finalProcessXML = processEditor.getFinalProcessXML();
 	
 		finalProcessXML = processEditor.addFirstFragmentToProcess(finalProcessXML, fragmentsToSynthesize.get(0));
 		while(index < fragmentsToSynthesize.size() -1 )
 		{
-		  	FragmentExt f1 = fragmentsToSynthesize.get(index);
-		  	FragmentExt f2 = fragmentsToSynthesize.get(index + 1);
+		  	FragmentExt fragmentLeft = fragmentsToSynthesize.get(index);
+		  	FragmentExt fragmentRight = fragmentsToSynthesize.get(index + 1);
 		  	
-			finalProcessXML = processEditor.appendFragmentToFile(finalProcessXML, f2);
-		  	for(ConnectionPoint cp1 : f1.getConnectionPoints())
+			finalProcessXML = processEditor.appendFragmentToFile(finalProcessXML, fragmentRight);
+		  	for(ConnectionPoint connectionPointLeft : fragmentLeft.getConnectionPoints())
 		  	{
-	  		  	for(ConnectionPoint cp2 : f2.getConnectionPoints())
+	  		  	for(ConnectionPoint connectionPointRight : fragmentRight.getConnectionPoints())
 			  	{
-		  		  	
-			  			while(cp1.getNeededOutgoing() > 0 && cp2.getNeededIncoming() > 0 )
+			  			while(connectionPointLeft.getNeededOutgoing() > 0 && connectionPointRight.getNeededIncoming() > 0 )
 				  		{  	
-			  				
-				  			processEditor.linkConnectionPoints(cp1, cp2);
-				  			cp1 = processEditor.getBaseCp();
-				  			cp2 = processEditor.getCompareCP();
+				  			processEditor.linkConnectionPoints(connectionPointLeft, connectionPointRight);
+				  			connectionPointLeft = processEditor.getBaseCp();
+				  			connectionPointRight = processEditor.getCompareCP();
 				  			
 				  		}
-				  		if(cp1.getNeededIncoming() > 0  && cp2.getNeededOutgoing() > 0 )
+				  		if(connectionPointLeft.getNeededIncoming() > 0  && connectionPointRight.getNeededOutgoing() > 0 )
 				  		{
-				  			while(cp2.getNeededOutgoing() > 0 )
+				  			while(connectionPointRight.getNeededOutgoing() > 0 )
 				  			{
 				  				//f2, f1, cp2, cp1, finalProcessXML
-					  			
-					  			processEditor.linkConnectionPoints(cp2, cp1);
-					 			cp2 = processEditor.getBaseCp();
-					  			cp1 = processEditor.getCompareCP();
+					  			processEditor.linkConnectionPoints(connectionPointRight, connectionPointLeft);
+					 			connectionPointRight = processEditor.getBaseCp();
+					  			connectionPointLeft = processEditor.getCompareCP();
 				  			}
 				  		}
-		  		  
 			  	}
 		  	}
-	
 			index++;
-
 		}	
-		FragmentExt f2 = fragmentsToSynthesize.get(fragmentsToSynthesize.size() -1 );
-	  	for(ConnectionPoint cp2 : f2.getConnectionPoints())
+		FragmentExt lastFragment = fragmentsToSynthesize.get(fragmentsToSynthesize.size() -1 );
+	  	for(ConnectionPoint connectionPointOfLastFragment : lastFragment.getConnectionPoints())
 	  	{
-	  		while(cp2.getNeededOutgoing() > 0 )
+	  		while(connectionPointOfLastFragment.getNeededOutgoing() > 0 )
 	  		{
-	  			processEditor.addEndEvent(cp2);
-	  			cp2 = processEditor.getBaseCp();
+	  			processEditor.addEndEvent(connectionPointOfLastFragment);
+	  			connectionPointOfLastFragment = processEditor.getBaseCp();
 	  		}
 	  	}
 				
 		return processEditor.writeProcessToXML();
 	}
+	
+
+	
 }

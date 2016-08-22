@@ -129,7 +129,7 @@ public class UserDefinedCriteria {
 			try {
 				// if(resultFragments != null) resultFragments.beforeFirst();
 				while (resultFragments.next()) {
-					FragmentExt selectedFragment = createFragment(resultFragments);
+					FragmentExt selectedFragment = createFragmentExtFromDB(resultFragments);
 					tmp.add(selectedFragment);
 				}
 				if (!tmp.isEmpty())
@@ -147,7 +147,7 @@ public class UserDefinedCriteria {
 
 	}
 
-	public FragmentExt createFragment(ResultSet resultFragment) {
+	public FragmentExt createFragmentExtFromDB(ResultSet resultFragment) {
 
 		String fid;
 		try {
@@ -178,106 +178,43 @@ public class UserDefinedCriteria {
 
 	private String makeFragmentSelectionQuery(Criterio cr, int fragmentPos,
 			int totalSize) {
-
-		String query = 
-				"select * from fragments where" + " ";
-
-		int tableCnt = 0;
-		String andStr = " AND ";
-		String queryEnd = "; ";
-
 		String scriptTaskQuery = "numberOfScriptTasks";
 		String serviceTaskQuery = "numberOfServiceTasks";
 		String callActivityQuery = "numberOfCallActivity";
 
 		String exclGatewayQuery = "numberOfExclusiveGateways";
 		String parallelGatewayQuery = "numberOfParallelGateways";
-		//FIXME: make the following a function!!
+		String andStr = " AND ";
+		String queryEnd = "; ";
 		
-	//	if (cr.getTask() != 0) {
-			query +=  scriptTaskQuery + " = " + cr.getTask();
-			tableCnt++;
-	//	}
-	//	if (cr.getServiceTask() != 0) {
-			if (tableCnt != 0)
-				query += andStr;
-			query +=  serviceTaskQuery + " = " + cr.getServiceTask();
-			tableCnt++;
-	//	}
-	//	if (cr.getCallActivity() != 0) {
-
-			if (tableCnt != 0)
-				query += andStr;
-			query +=  callActivityQuery + " = " + cr.getCallActivity();
-		
-			tableCnt++;
-	//	}
-	//	if (cr.getExclGateway() != 0) {
-
-			if (tableCnt != 0)
-				query += andStr;
-			query +=  exclGatewayQuery + " = " + cr.getExclGateway();
-			tableCnt++;
-		//}
-	//	if (cr.getParalGateway() != 0) {
-
-			if (tableCnt != 0)
-				query += andStr;
-				query +=  parallelGatewayQuery + " = " + cr.getParalGateway();
-				tableCnt++;
-	//	}
-//
+		String query = 
+				"select * from fragments where" + " ";
+		query +=  scriptTaskQuery + " = " + cr.getTask();
+		query += andStr;
+		query +=  serviceTaskQuery + " = " + cr.getServiceTask();
+		query += andStr;
+		query +=  callActivityQuery + " = " + cr.getCallActivity();
+		query += andStr;
+		query +=  exclGatewayQuery + " = " + cr.getExclGateway();
+		query += andStr;
+		query +=  parallelGatewayQuery + " = " + cr.getParalGateway();
+		//check position of fragments to restrict the existence of start or end events
 		if (fragmentPos == 0) {
 			query += andStr;
-			query += "hasStartEvent = 1 "; //fixme: will have to add a start event if no existent
+			query += "hasStartEvent = 1 "; 
 			query += andStr;
 			query += " hasEndEvent = 0 ";
 		} else if (fragmentPos == totalSize - 1) {
 			query += andStr;
 			query += "hasStartEvent = 0 ";
-			// query += andStr; //this is omitted because we are not having many
-			// elements with endEvent and the selection fails
-			// query += " f.hasEndEvent = 1 ";
 		} else {
 			query += andStr;
 			query += "hasStartEvent = 0 AND hasEndEvent = 0 ";
 		}
-	//	query += "AND numberOfFlowNodes >= " + size;
 		query += queryEnd;
 		return query;
 	}
 
-	/**
-	 * Sets the DB connection to query a FragmentID with respect to criteria
-	 * 
-	 * @param criteria
-	 * @return
-	 */
-	// private int getFragmentID(CriteriaEntity criteria)
-	// {
-	// DBConnectionMiddleware DBMidObj = new DBConnectionMiddleware();
-	// return DBMidObj.getFragmentID(criteria);
-	// }
-
-	// TODO: remove this is not necessary
-	// public List<Integer> getFragmentsList()
-	// {
-	// return this.FragmentsList;
-	// }
-
-//	private void computeSize(Document doc) {
-//		Element size = (Element) doc.getElementsByTagName(
-//				Constants.CriteriaCfcElement).item(0);
-//		sizeMin = Integer.parseInt(size
-//				.getAttribute(Constants.CriteriaCfcMinAttribute));
-//		sizeMax = Integer.parseInt(size
-//				.getAttribute(Constants.CriteriaCfcMaxAttribute));
-//	}
-
-//	public String getProcessEngine() {
-//		return processEngine;
-//	}
-	
 	
 	public int getNoOfCriteria()
 	{

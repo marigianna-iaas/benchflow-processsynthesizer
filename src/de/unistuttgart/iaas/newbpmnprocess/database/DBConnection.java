@@ -79,32 +79,6 @@ public class DBConnection {
 		return rst;
 	}
 
-//using executeUpdate for delete inserts etc
-//	public ResultSet selectData2(String sql)
-//	{
-//		ResultSet rst = null;
-//		try
-//		{
-//			//Connection conn = setupConnection();
-//			//PreparedStatement stmt = conn.prepareStatement(sql);
-//			//rst = stmt.executeQuery();
-//			
-//			Connection conn = setupConnection();
-//			Statement stmt = conn.createStatement();
-//			stmt.executeUpdate("DELETE FROM ConnectionPointsStats WHERE 1");
-//			stmt.executeUpdate(
-//					"INSERT INTO ConnectionPointsStats (fid, type, counter) SELECT fid, type, count(type) as counter FROM `connectionPoints` where 1 group by fid, type ");		
-//			rst = stmt.executeQuery(sql);
-//		}
-//		
-//		catch (Throwable ex)
-//		{
-//			ex.printStackTrace();
-//			System.err.println(ex.getMessage());
-//		}
-//		
-//		return rst;
-//	}
 	
 	
 	public void closeConnection()
