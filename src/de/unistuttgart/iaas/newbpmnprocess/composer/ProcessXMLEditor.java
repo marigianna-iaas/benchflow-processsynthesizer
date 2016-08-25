@@ -9,7 +9,6 @@ import java.util.Collections;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -39,8 +38,8 @@ import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
 public class ProcessXMLEditor {
 	private Document finalProcessXML;
 	
-	private ConnectionPoint baseCP;
-	private ConnectionPoint compareCP; 
+	private ConnectionPoint leftConnectionPoint;
+	private ConnectionPoint rightConnectionPoint; 
 	
 	
 	private String newProcessFileName;
@@ -65,13 +64,10 @@ public class ProcessXMLEditor {
 
 				transformer.transform(source, result);
 				return this.newProcessFileName;
-				} catch (TransformerConfigurationException e) {
-					e.printStackTrace();
-					return null;
 				} catch (TransformerException e) {
 					e.printStackTrace();
 					return null;
-				}
+				} 
 	}
 	
 	public void writeDefinitionsToXML()
@@ -99,18 +95,14 @@ public class ProcessXMLEditor {
 	
 	private String createNewBpmnFileName()
 	{
-	  
+		SecureRandom random = new SecureRandom();
+		String randomId =  new BigInteger(130, random).toString(32);
 		String bpmnFileName = Constants.BpmnFilesPath + File.separator + "newProcess"
-		+ getRandomId()+ ".bpmn2";
+		+ randomId+ ".bpmn2";
 		return bpmnFileName;
 	}
 	
-	public String getRandomId()
-	{
-		SecureRandom random = new SecureRandom();
-		return new BigInteger(130, random).toString(32);
-	}
-	
+
 	private Document initFinalProcessXML()
 	{
 		try {
@@ -121,40 +113,12 @@ public class ProcessXMLEditor {
 			Document xmlOfNewProcess = xmlFactory.newDocumentBuilder().parse(new File(this.newProcessFileName));
 			return xmlOfNewProcess;
 
-		} catch (SAXException e) {
+		} catch (SAXException | IOException | ParserConfigurationException e) {
 			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			return null;
+			return null; 
 		}
 	}
 	
-	
-	public Document createProcessXMLFile()
-	{
-		try {
-		 DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
-		 org.w3c.dom.Document xmlOfNewProcess = 
-				 xmlFactory.newDocumentBuilder().parse(new File(this.newProcessFileName));
-		 
-		 return xmlOfNewProcess;
-		
-		} catch (SAXException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
 	
 	public Node getProcessNode(Document doc)
 	{
@@ -173,10 +137,17 @@ public class ProcessXMLEditor {
 	public Document getFinalProcessXML() {
 		return finalProcessXML;
 	}
-
-	public void setFinalProcessXML(Document processXML) {
-		this.finalProcessXML = processXML;
+//delete never called 
+//	public void setFinalProcessXML(Document processXML) {
+//		this.finalProcessXML = processXML;
+//	}
+	
+	public String getRandomId()
+	{
+		SecureRandom random = new SecureRandom();
+		return new BigInteger(130, random).toString(32);
 	}
+	
 	
 	public Document appendFragmentToFile(Document finalProcessXML, FragmentExt f)
 	{
@@ -199,43 +170,6 @@ public class ProcessXMLEditor {
 		return finalProcessXML;
 	}
 	
-	
-	public void linkConnectionPoints(ConnectionPoint baseCP, ConnectionPoint compareCP)
-	{
-			this.baseCP = baseCP;
-			this.compareCP = compareCP;
-			if(baseCP.getNeededOutgoing() >0 )	
-			{	
-//				Node processNode = 
-//						finalProcessXML.getDocumentElement().
-//						getElementsByTagName("bpmn2:process").item(0);
-				String outgoingFNId = baseCP.getFlownode().getId();
-				String incomingFNId = compareCP.getFlownode().getId();
-				String newSequenceFlowId = getRandomId();
-
-				finalProcessXML= createSequenceFlow(newSequenceFlowId, outgoingFNId, incomingFNId );
-
-				//for the outgoing
-				Node setOutgoingNode = getNodeFromId(finalProcessXML, baseCP);
-				
-				org.w3c.dom.Element outgoingNode = finalProcessXML.createElement("bpmn2:outgoing");
-				outgoingNode.setNodeValue(newSequenceFlowId); 
-				Node newOutgoingNode = setOutgoingNode.appendChild(outgoingNode);
-				
-				finalProcessXML = appendNodeToProcess(finalProcessXML, newOutgoingNode);
-				baseCP.setNeededOutgoing(baseCP.getNeededOutgoing() -1 );
-				
-				//for the incoming
-				Node setIncomingNode = getNodeFromId(finalProcessXML, compareCP);
-				
-				org.w3c.dom.Element incomingNode = finalProcessXML.createElement("bpmn2:incoming");
-				incomingNode.setNodeValue(newSequenceFlowId); 
-				Node newIncomingNode = setIncomingNode.appendChild(incomingNode);
-				
-				finalProcessXML = appendNodeToProcess(finalProcessXML, newIncomingNode);
-				compareCP.setNeededIncoming(compareCP.getNeededIncoming() -1 );
-			}
-	}
 	
 	public Document appendElementToProcess(Document finalProcessXML, Element el)
 	{
@@ -265,16 +199,7 @@ public class ProcessXMLEditor {
 		return finalProcessXML;
 	}
 	
-	public Document createSequenceFlow(String sequenceFlowId, String outgoingFNId, String incomingFNId)
-	{
-		org.w3c.dom.Element sequenceFlow = finalProcessXML.createElement("bpmn2:sequenceFlow");
-		sequenceFlow.setAttribute("id", sequenceFlowId);
-		sequenceFlow.setAttribute("sourceRef", outgoingFNId);
-		sequenceFlow.setAttribute("targetRef", incomingFNId);
-		finalProcessXML = appendElementToProcess(finalProcessXML, sequenceFlow);
-		//finalProcessXML.getDocumentElement().appendChild(sequenceFlow);
-		return finalProcessXML;
-	}
+
 	
 	private Node getNodeFromId(Document finalProcessXML, ConnectionPoint cp)
 	{
@@ -297,41 +222,135 @@ public class ProcessXMLEditor {
 	
 
 
-	public ConnectionPoint getBaseCp() {
-		return baseCP;
+	public ConnectionPoint getLeftConnectionPoint() {
+		return leftConnectionPoint;
 	}
 
-	public ConnectionPoint getCompareCP() {
-		return compareCP;
+	public ConnectionPoint getRightConncetionPoint() {
+		return rightConnectionPoint;
 	}
 
-	public void addEndEvent(ConnectionPoint cp) {
-		baseCP = cp;
-		String incomingFNId = getRandomId();
-		String outgoingFNId = cp.getFlownode().getId();
-		String newSequenceFlowId = getRandomId();
+	public void addEndEventToConnectionPoint(ConnectionPoint connectionPointOfCurrFragment) {
+		//create the new IDs
+		String targetRefId = getRandomId();
+		String sourceRefId = connectionPointOfCurrFragment.getFlownode().getId();
+		String sequenceFlowId = getRandomId();
 
-		finalProcessXML= createSequenceFlow(newSequenceFlowId, outgoingFNId, incomingFNId );
+		//get the existentNodeToConnect
+		Node leftConnectionPointNode = getNodeFromId(finalProcessXML, connectionPointOfCurrFragment);
 
+		//create the new end event node
+		Element endEventNode = finalProcessXML.createElement("bpmn2:endEvent");
+		endEventNode.setAttribute("id", targetRefId);
+		finalProcessXML = appendElementToProcess(finalProcessXML, endEventNode);
+
+		finalProcessXML  = addTwoNodes(leftConnectionPointNode , endEventNode, sourceRefId, targetRefId, sequenceFlowId);
+		//finalProcessXML = appendNodeToProcess(finalProcessXML, endEventNode);
+	}
+	
+	public void addStartEventToConnectionPoint(ConnectionPoint connectionPointOfCurrFragment) {
+		//create the new IDs
+		String sourceRefId = getRandomId();
+		String targetRefId = connectionPointOfCurrFragment.getFlownode().getId();
+		String sequenceFlowId = getRandomId();
+
+		//get the existentNodeToConnect
+		Node rightConnectionPointNode = getNodeFromId(finalProcessXML, connectionPointOfCurrFragment);
+
+		//create the new end event node
+		Element startEventNode = finalProcessXML.createElement("bpmn2:startEvent");
+		startEventNode.setAttribute("id", sourceRefId);
+		finalProcessXML = appendElementToProcess(finalProcessXML, startEventNode);
+
+		finalProcessXML = addTwoNodes(startEventNode , rightConnectionPointNode, sourceRefId, targetRefId, sequenceFlowId);
+
+
+		//finalProcessXML = appendNodeToProcess(finalProcessXML, startEventNode);
+	}
+
+	private Document addTwoNodes(Node sourceNode, Node targetNode, String sourceNodeId, String targetNodeId, String sequenceFlowId) {
+		finalProcessXML= createSequenceFlowOnDocument(sourceNodeId , targetNodeId ,sequenceFlowId );
 		//for the outgoing
-		Node setOutgoingNode = getNodeFromId(finalProcessXML, baseCP);
-		
-		org.w3c.dom.Element outgoingNode = finalProcessXML.createElement("bpmn2:outgoing");
-		outgoingNode.setNodeValue(newSequenceFlowId); 
-		Node newOutgoingNode = setOutgoingNode.appendChild(outgoingNode);
-		
-		finalProcessXML = appendNodeToProcess(finalProcessXML, newOutgoingNode);
-		baseCP.setNeededOutgoing(baseCP.getNeededOutgoing() -1 );
+		addElementToNode(finalProcessXML, sourceNode, sequenceFlowId, "bpmn2:outgoing");
 		
 		//for the incoming
+		addElementToNode(finalProcessXML, targetNode, sequenceFlowId, "bpmn2:incoming");
+		return finalProcessXML;
+	}
+	
+	/**
+	 * Will connect 2 edges 
+	 * @param leftConnectionPoint
+	 * @param rightConnectionPoint
+	 */
+	public void linkSequenceFlowsOfConnectionPoints(ConnectionPoint leftConnectionPoint, ConnectionPoint rightConnectionPoint)
+	{
+			if(leftConnectionPoint.getNeededOutgoing() >0 )	
+			{	
+				//create the SequenceFlow
+				String targetRefId = rightConnectionPoint.getFlownode().getId();
+				String sourceRefId  = leftConnectionPoint.getFlownode().getId();
+				String sequenceFlowId = getRandomId();
+				//get the left node from the left connection point
+				Node leftConnectionPointNode = getNodeFromId(finalProcessXML, leftConnectionPoint);
+				
+				//get the right node from the right connection point
+				Node rightConnectionPointNode = getNodeFromId(finalProcessXML, rightConnectionPoint);
+				finalProcessXML = addTwoNodes(leftConnectionPointNode , rightConnectionPointNode, sourceRefId, targetRefId, sequenceFlowId);
+			}
+	}
+	
+	
+	private void addElementToNode(Document finalProcessXML,Node nodeToAdd, String sequenceFlowId, String elementTag) {		
+		org.w3c.dom.Element newEmptyElement = finalProcessXML.createElement(elementTag);
+		newEmptyElement.appendChild(finalProcessXML.createTextNode(sequenceFlowId));
+
+		nodeToAdd.appendChild(newEmptyElement);
+	}
+
+	private Document createSequenceFlowOnDocument(String sourceRefId,String targetRefId, String sequenceFlowId)
+	{
+		org.w3c.dom.Element sequenceFlow = finalProcessXML.createElement("bpmn2:sequenceFlow");
+		sequenceFlow.setAttribute("id", sequenceFlowId);
+		sequenceFlow.setAttribute("sourceRef", sourceRefId);
+		sequenceFlow.setAttribute("targetRef", targetRefId);
+		finalProcessXML = appendElementToProcess(finalProcessXML, sequenceFlow);
+		return finalProcessXML;
+	}
+
+	
+	public void addRelaxPointAndEndEvent(ConnectionPoint connectionPointOfCurrFragment) {		
+		
+		//get the appropriate IDs
+		String targetRefId = getRandomId();
+		String sourceRefId = connectionPointOfCurrFragment.getFlownode().getId();
+		String sequenceFlowId = getRandomId();
+		
+		//get the current node from the connection point on the left
+		Node currentConnectionPointNode = getNodeFromId(finalProcessXML, connectionPointOfCurrFragment);
+		//create the relax node
+		Element taskNode = finalProcessXML.createElement("bpmn2:task");
+		taskNode.setAttribute("id", targetRefId);
+		taskNode.setAttribute("name", "Relax Node");
+		finalProcessXML = appendElementToProcess(finalProcessXML, taskNode);
+
+		
+		finalProcessXML  = addTwoNodes( currentConnectionPointNode , taskNode, sourceRefId, targetRefId, sequenceFlowId);
+		//finalProcessXML = appendNodeToProcess(finalProcessXML, taskNode);
+		
+		//make the new IDs
+		String endEventTargetRefId = getRandomId();
+		String endEventSourceRefId = targetRefId;
+		sequenceFlowId = getRandomId();
+		
+		//create the new end event
 		Element endEventNode = finalProcessXML.createElement("bpmn2:endEvent");
-		endEventNode.setAttribute("id", incomingFNId);
+		endEventNode.setAttribute("id", endEventTargetRefId);
+		finalProcessXML = appendElementToProcess(finalProcessXML, endEventNode);
+
 		
-		org.w3c.dom.Element incomingNode = finalProcessXML.createElement("bpmn2:incoming");
-		incomingNode.setNodeValue(newSequenceFlowId); 
-		Node newIncomingNode = endEventNode.appendChild(incomingNode);
-		
-		finalProcessXML = appendNodeToProcess(finalProcessXML, newIncomingNode);
-		finalProcessXML = appendNodeToProcess(finalProcessXML, endEventNode);
+		finalProcessXML  =  addTwoNodes( taskNode , endEventNode, endEventSourceRefId, endEventTargetRefId, sequenceFlowId);
+
+		//finalProcessXML = appendNodeToProcess(finalProcessXML, endEventNode);
 	}	
 }

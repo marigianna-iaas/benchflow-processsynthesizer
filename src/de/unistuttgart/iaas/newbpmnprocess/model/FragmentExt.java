@@ -11,8 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,10 +23,18 @@ import org.drools.compiler.compiler.PackageBuilder;
 import org.drools.core.RuleBase;
 import org.drools.core.RuleBaseFactory;
 import org.drools.core.WorkingMemory;
+import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.Bpmn2Package;
+import org.eclipse.bpmn2.ChoreographyActivity;
+import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Process;
+import org.eclipse.bpmn2.StartEvent;
+import org.eclipse.bpmn2.SubProcess;
+import org.eclipse.bpmn2.Task;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -44,8 +53,12 @@ import de.unistuttgart.iaas.newbpmnprocess.utils.Constants;
  */
 // TODO: this model instance inheritance can be lifted? I believe it is only
 // used for the process modeling
+//TODO: this should most probably be two classes of FragmentExt and FragmentExtMetadata
 public class FragmentExt extends ModelInstance {
 
+	public static Set<String> nonCoreElements = new HashSet<String>();
+	public static Set<String> coreElements = new HashSet<String>();
+	
 	private boolean hasStartEvent = false;
 	private boolean hasEndEvent = false;
 	private String id;
@@ -58,9 +71,8 @@ public class FragmentExt extends ModelInstance {
 
 	// TODO: generalize these types to superclasses?
 	private Collection<EClass> activityTypes = Arrays.asList(
-			Bpmn2Package.Literals.CALL_ACTIVITY,
-			Bpmn2Package.Literals.SCRIPT_TASK,
-			Bpmn2Package.Literals.SERVICE_TASK);
+			Bpmn2Package.Literals.ACTIVITY,
+			Bpmn2Package.Literals.TASK);
 
 	// TODO: generalize these types to superclasses?
 	private Collection<EClass> gatewayTypes = Arrays.asList(
@@ -72,7 +84,7 @@ public class FragmentExt extends ModelInstance {
 	private int numberOfCallActivities = 0;
 	private int numberOfExclusiveGateways = 0;
 	private int numberOfServiceTasks = 0;
-	private int numberOfInclusiveGateways;
+	private boolean hasNonCoreElements;
 
 	/**
 	 * Load fragment from file
@@ -86,17 +98,10 @@ public class FragmentExt extends ModelInstance {
 		this.id = calculateId();
 		if (id != null) {
 			
-			hasStartEvent = hasEventType(
-					Arrays.asList(Bpmn2Package.Literals.START_EVENT),
-					Constants.BpmnStartEventElement);
-			hasEndEvent = hasEventType(
-					Arrays.asList(Bpmn2Package.Literals.END_EVENT),
-					Constants.BpmnEndEventElement);
 			connectionPoints = new ArrayList<ConnectionPoint>();
+			fixFragmentExtMetadata();
 
-			this.connectionPoints = calculateFragmentMetadata(id);
-			fixNumberOfFlowNodes();
-			fixFragmentsConnections();
+			this.connectionPoints = fixFragmentExtConnectionPoints(id);
 			isValidFragment = checkIfValidFragment();
 		}
 
@@ -113,7 +118,7 @@ public class FragmentExt extends ModelInstance {
 	 */
 	public FragmentExt(String fid, String modelFileURI, boolean hasStartEvent,
 			boolean hasEndEvent, int numberOfFlowNodes, int numberOfCallActivities, 
-			int numberOfScriptTasks, int numberOfServiceTasks, int numberOfParallelGateways,int numberOfExclusiveGateways ) {
+			int numberOfScriptTasks, int numberOfServiceTasks, int numberOfParallelGateways,int numberOfExclusiveGateways, boolean hasNonCoreElements ) {
 		// FIXME: there should be a local folder of files with the fragments!!!
 		super(modelFileURI);
 		this.id = fid;
@@ -127,37 +132,9 @@ public class FragmentExt extends ModelInstance {
 		this.numberOfServiceTasks = numberOfServiceTasks;
 		this.numberOfParallelGateways = numberOfParallelGateways;
 		this.numberOfExclusiveGateways = numberOfExclusiveGateways;
-		fixFragmentsConnections();
+		this.hasNonCoreElements = hasNonCoreElements;
 		isValidFragment = checkIfValidFragment();
 
-	}
-
-	/**
-	 * Check if it has Event type and in this case we should also implement the
-	 * eligibility check
-	 * 
-	 * @param event
-	 * @param eventImplName
-	 * @return
-	 */
-	private boolean hasEventType(Collection<EClass> event, String eventImplName) {
-		// parsing fragment file and saving events information in the java
-		// object
-		for (TreeIterator<EObject> iterator = CompareUtils
-				.getAllContentsWithSpecificTypes(process, event, true); iterator
-				.hasNext();) {
-
-			EObject current = iterator.next();
-			if (current instanceof FlowNode) {
-				FlowNode node = (FlowNode) current;
-
-				if (node.getClass().getSimpleName().matches(eventImplName)) {
-					return true;
-				}
-
-			}
-		}
-		return false;
 	}
 
 	// TODO: remove the valid fragment concept
@@ -177,11 +154,11 @@ public class FragmentExt extends ModelInstance {
 		return true;
 	}
 
-	public boolean getHasStartEvent() {
+	public boolean hasStartEvent() {
 		return hasStartEvent;
 	}
 
-	public boolean getHasEndEvent() {
+	public boolean hasEndEvent() {
 		return hasEndEvent;
 	}
 
@@ -189,11 +166,11 @@ public class FragmentExt extends ModelInstance {
 		return connectionPoints;
 	}
 
-	public void setConnectionPoints(List<ConnectionPoint> connectionPoints) {
-		this.connectionPoints = connectionPoints;
+	public void addNewConnectionPointsToList(List<ConnectionPoint> connectionPoints) {
+		this.connectionPoints.addAll(connectionPoints) ;
 	}
 
-	public boolean getIsValidFragment() {
+	public boolean isValidFragment() {
 		return isValidFragment;
 	}
 
@@ -228,8 +205,10 @@ public class FragmentExt extends ModelInstance {
 	 * @throws IOException
 	 * @throws DroolsParserException
 	 */
-	protected List<ConnectionPoint> scanActivities(Process prcs, String fid)
+	protected List<ConnectionPoint> scanActivities(Process prcs)
 			throws DroolsParserException, IOException {
+		List <ConnectionPoint> discoveredConnectionPoints = new ArrayList<ConnectionPoint>();
+		
 		for (TreeIterator<EObject> iterator = CompareUtils
 				.getAllContentsWithSpecificTypes(process, activityTypes, true); iterator
 				.hasNext();) {
@@ -237,15 +216,15 @@ public class FragmentExt extends ModelInstance {
 			EObject curr = iterator.next();
 			if (curr instanceof FlowNode) {
 				FlowNode node = (FlowNode) curr;
-				ConnectionPoint connP = new ConnectionPoint(fid, node
+				ConnectionPoint connP = new ConnectionPoint(id, node
 						.getClass().getSimpleName().toString(), node);
 				executeActivityRules(node, connP);
 				if (connP.isValidConnectionPoint()) {
-					connectionPoints.add(connP);
+					discoveredConnectionPoints.add(connP);
 				}
 			}
 		}
-		return connectionPoints;
+		return discoveredConnectionPoints;
 	}
 
 	protected void executeActivityRules(FlowNode node, ConnectionPoint connP)
@@ -281,8 +260,10 @@ public class FragmentExt extends ModelInstance {
 	 * @throws IOException
 	 * @throws DroolsParserException
 	 */
-	protected List<ConnectionPoint> scanGateways(Process prcs, String fid)
+	protected List<ConnectionPoint> scanGateways(Process prcs)
 			throws DroolsParserException, IOException {
+		List <ConnectionPoint> discoveredConnectionPoints = new ArrayList<ConnectionPoint>();
+
 		for (TreeIterator<EObject> iterator = CompareUtils
 				.getAllContentsWithSpecificTypes(process, gatewayTypes, true); iterator
 				.hasNext();) {
@@ -290,18 +271,19 @@ public class FragmentExt extends ModelInstance {
 			EObject current = iterator.next();
 			if (current instanceof FlowNode) {
 				FlowNode node = (FlowNode) current;
-				ConnectionPoint connP = new ConnectionPoint(fid, node
+				ConnectionPoint connP = new ConnectionPoint(id, node
 						.getClass().getSimpleName().toString(), node);
 				executeGatewaysRules(node, connP);
 
 				if (connP.isValidConnectionPoint()) {
-					connectionPoints.add(connP);
+					discoveredConnectionPoints.add(connP);
 				}
 			}
 		}
-		return connectionPoints;
+		return discoveredConnectionPoints;
 	}
 
+	
 	/**
 	 * Evaluates the open connections of each gateway
 	 * 
@@ -312,56 +294,65 @@ public class FragmentExt extends ModelInstance {
 	 * @throws IOException
 	 */
 	protected void executeGatewaysRules(FlowNode node, ConnectionPoint connP)
-			throws DroolsParserException, IOException {
+			throws DroolsParserException, IOException {		
+	
+		//stable cases
 		if (node.getIncoming().size() == 1 && node.getOutgoing().size() >= 2) {
-			connP.setNeededIncoming(0);
-			connP.setNeededOutgoing(0);
+			connP.setNeededConnections(0, 0, false);
 		} else if (node.getIncoming().size() >= 2
 				&& node.getOutgoing().size() == 1) {
-			connP.setNeededIncoming(0);
-			connP.setNeededOutgoing(0);
+			connP.setNeededConnections(0, 0, false);
 		} else if (node.getIncoming().size() < 1
 				&& node.getOutgoing().size() >= 2) {
-			connP.setNeededIncoming(1);
-			connP.setNeededOutgoing(0);
+			connP.setNeededConnections(1, 0, false);
 		} else if (node.getIncoming().size() >= 2
-				&& node.getOutgoing().size() < 1) {
-			connP.setNeededOutgoing(1);
-			connP.setNeededIncoming(0);
-		} else if (node.getIncoming().size() == 1
-				&& node.getOutgoing().size() < 1) {
-			connP.setNeededOutgoing(2);
-			connP.setNeededIncoming(0);
-		} else if (node.getIncoming().size() < 1
-				&& node.getOutgoing().size() == 1) {
-			connP.setNeededIncoming(2);
-			connP.setNeededOutgoing(0);
-		} else if (node.getIncoming().size() == 1
-				&& node.getOutgoing().size() == 1) {
-			// here we are reducing the probability to create an invalid
-			// fragment
-			// and most probably increase connectivity
-			if (this.hasStartEvent && !this.hasEndEvent) {
-				connP.setNeededOutgoing(1);
-				connP.setNeededIncoming(0);
-			} else if (this.hasEndEvent && !this.hasStartEvent) {
-				connP.setNeededIncoming(1);
-				connP.setNeededOutgoing(0);
-
-			} else {
-				// creates incoming or outgoing connection randomly
-				// TODO: can it get smarter?
-				Random random = new Random();
-				if (random.nextBoolean())
-					connP.setNeededIncoming(1);
-				else {
-					connP.setNeededOutgoing(1);
-					connP.setNeededIncoming(0);
+				&& node.getOutgoing().size() == 0) {
+			connP.setNeededConnections(0, 1, false);
+		//Special and flexible cases
+		//The flexible connection points will have always 2 incoming and 2 outgoing
+		//The real number will be evaluated during the linking process
+		} else if (node.getIncoming().size() == 1 && node.getOutgoing().size() == 0) {
+				if(this.hasStartEvent)
+				{
+					connP.setNeededConnections(0, 2, false);				
 				}
-
-			}
+				else if(this.hasEndEvent)
+				{
+					connP.setNeededConnections(1, 1, false);		
+				}
+				else //then it can be used as flexi. Flexis will have in total 2 and 2 and they will be adjusted accordingly
+				{
+					connP.setNeededConnections(1, 2, false);
+				}
+		} else if (node.getIncoming().size() == 0 && node.getOutgoing().size() == 1) {
+				if(this.hasStartEvent)
+				{
+					connP.setNeededConnections(1, 1, false);				
+				}
+				else if(this.hasEndEvent)
+				{
+					connP.setNeededConnections(2, 0, false);		
+				}
+				else //then it can be used as flexi
+				{
+					connP.setNeededConnections(2, 1, true);
+				}
+		} else if (node.getIncoming().size() == 1 && node.getOutgoing().size() == 1) {
+				if(this.hasStartEvent)
+				{
+					connP.setNeededConnections(0, 1, false);				
+				}
+				else if(this.hasEndEvent)
+				{
+					connP.setNeededConnections(1, 0, false);		
+				}
+				else //then it can be used as flexi
+				{
+					connP.setNeededConnections(1, 1, true);
+				}
 		}
 	}
+	
 
 	/**
 	 * It reads each model in the collection and applies the rules to create the
@@ -372,14 +363,15 @@ public class FragmentExt extends ModelInstance {
 	 * @throws DroolsParserException
 	 * @throws IOException
 	 */
-	protected List<ConnectionPoint> calculateFragmentMetadata(String fid) {
+	protected List<ConnectionPoint> fixFragmentExtConnectionPoints(String fid) {
 		try {
 			// will do the procedures if the fragment is valid for the DB
 			// otherwise it is skipped
-			this.connectionPoints = scanActivities(this.discoverProcesses()
-					.get(0), fid);
-			this.connectionPoints = scanGateways(this.discoverProcesses()
-					.get(0), fid);
+			List <ConnectionPoint> discoveredConnectionPoints = null;
+			discoveredConnectionPoints = scanActivities(this.discoverProcesses().get(0));
+			this.addNewConnectionPointsToList(discoveredConnectionPoints);
+			discoveredConnectionPoints = scanGateways(this.discoverProcesses().get(0));
+			this.addNewConnectionPointsToList(discoveredConnectionPoints);
 
 		} catch (DroolsParserException e) {
 			e.printStackTrace();
@@ -389,19 +381,23 @@ public class FragmentExt extends ModelInstance {
 		return connectionPoints;
 	}
 
+	//INVESTIGATE: might not be the safest but at least it will be consistent?
 	public int getIncomingConnections() {
-		return incomingConnections;
-	}
-
-	public void fixFragmentsConnections() {
+		this.incomingConnections = 0;
 		for (ConnectionPoint connectionPoint : connectionPoints) {
 			this.incomingConnections += connectionPoint.getNeededIncoming();
-			this.outgoingConnections += connectionPoint.getNeededOutgoing();
 		}
+		return this.incomingConnections;
 	}
 
+	
+
 	public int getOutgoingConnections() {
-		return outgoingConnections;
+		this.outgoingConnections = 0;
+		for (ConnectionPoint connectionPoint : connectionPoints) {
+			this.outgoingConnections += connectionPoint.getNeededOutgoing();
+		}
+		return this.outgoingConnections;
 	}
 
 	public boolean hasNoFailMatched(FragmentExt fragment) {
@@ -427,10 +423,11 @@ public class FragmentExt extends ModelInstance {
 				int incoming = resultConnectionPoints.getInt("incoming");
 				int outgoing = resultConnectionPoints.getInt("outgoing");
 				String nodeId = resultConnectionPoints.getString("nodeId");
+				boolean isFlexible = resultConnectionPoints.getBoolean("isFlexible");
 				FlowNode node = findFlowNodeInFragment(nodeId);
 				if (node != null) {
 					ConnectionPoint cp = new ConnectionPoint(fid, type,
-							incoming, outgoing, node);
+							incoming, outgoing, node, isFlexible);
 					connectionPoints.add(cp);
 				}
 			}
@@ -498,27 +495,56 @@ public class FragmentExt extends ModelInstance {
 	}
 	
 
-	private void fixNumberOfFlowNodes() {
+	private void fixFragmentExtMetadata() {
 		for (org.eclipse.bpmn2.FlowElement f : this.getProcess()
 				.getFlowElements()) {
 			if (f instanceof FlowNode) {
 
 				++numberOfFlowNodes;
-				FlowNode node = (FlowNode) f;
-				String nodeClassStr = node.getClass().getSimpleName()
-						.toString();
-				if (nodeClassStr.equals("ExclusiveGatewayImpl")) {
+				if (f instanceof SubProcess){
+					hasNonCoreElements = true;
+					nonCoreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else if(f instanceof ExclusiveGateway){
 					numberOfExclusiveGateways++;
-				} else if (nodeClassStr.equals("ParallelGatewayImpl")) {
+					coreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else if (f instanceof ParallelGateway){
 					numberOfParallelGateways++;
-				} else if (nodeClassStr.equals("ScriptTaskImpl") || nodeClassStr.equals("TaskImpl")) {
+					coreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else if (f instanceof Task){
 					numberOfScriptTasks++;
-				} else if (nodeClassStr.equals("CallActivityImpl")) {
+					coreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else if (f instanceof Activity || f instanceof ChoreographyActivity){
 					numberOfCallActivities++;
-				} else if (nodeClassStr.equals("ServiceTaskImpl")) {
-					numberOfServiceTasks++;
+					coreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else if (f instanceof StartEvent){
+					hasStartEvent = true;
+					coreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else if (f instanceof EndEvent){
+					hasEndEvent = true;
+					coreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
+				} else {
+					hasNonCoreElements = true;
+					nonCoreElements.add(((FlowNode)f).getClass().getSimpleName().toString());
 				}
 			}
 		}
+	}
+	
+	public boolean getHasNonCoreElements()
+	{
+		return this.hasNonCoreElements;
+	}
+	
+	public List<ConnectionPoint> getConnectionPointsByType(String type)
+	{
+		List<ConnectionPoint> connectionPointByTypeList = new ArrayList<ConnectionPoint>();
+		for(ConnectionPoint connP : this.connectionPoints)
+		{
+			if(connP.getType().equals(type))
+			{
+				connectionPointByTypeList.add(connP);
+			}
+		}
+		return connectionPointByTypeList;
 	}
 }

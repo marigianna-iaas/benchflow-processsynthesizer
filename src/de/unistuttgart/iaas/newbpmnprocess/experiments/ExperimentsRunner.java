@@ -18,7 +18,7 @@ import de.unistuttgart.iaas.newbpmnprocess.configuration.IErrorHandler;
 import de.unistuttgart.iaas.newbpmnprocess.configuration.Settings;
 import de.unistuttgart.iaas.newbpmnprocess.criteria.UserDefinedCriteria;
 import de.unistuttgart.iaas.newbpmnprocess.model.FragmentExt;
-import de.unistuttgart.iaas.newbpmnprocess.model.FragmentsCollection;
+import de.unistuttgart.iaas.newbpmnprocess.model.FragmentsCollectionSingleton;
 
 /**
  * @author skourama
@@ -41,12 +41,15 @@ public class ExperimentsRunner {
 		System.out.println("1. To load a new database from the default locations (indicated in Constants.class)");
 		System.out.println("2. Execute a syntehsis with respect to the criteria");
 		System.out.println("=========================================================");
+		@SuppressWarnings("resource")
 		Scanner in = new Scanner(System.in);
 		int num = in.nextInt();
 		if(num == LOAD_DB)
 		{
-			FragmentsCollection fragmentsCollection = new FragmentsCollection();
-			fragmentsCollection.loadFromFilesToDB();
+			FragmentsCollectionSingleton fragmentsCollectionInstance =  FragmentsCollectionSingleton.getInstance();
+			fragmentsCollectionInstance.loadCollectionFromFiles();
+			
+			fragmentsCollectionInstance.loadFromCollectionToDB();
 		}
 		else if (num == SYNTHESIZE_PROCESS)
 		{
@@ -140,12 +143,7 @@ public class ExperimentsRunner {
 		}
 	}
 	
-	//
-	public static List<List<FragmentExt>> selectFragments (Experiment experiment){
-		
-		return new UserDefinedCriteria(experiment.getPath()).getSelectedFragments();
-	}
-	
+
 	public static String composition(List<List<FragmentExt>> selectedFragments, Experiment experiment){
 		//check fragment count inside class
 		String newProcessFilePath = null;

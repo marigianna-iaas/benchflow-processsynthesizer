@@ -5,15 +5,15 @@
 	<Experiments>
 		<!-- 2 criteria -->
 	  	 	<Experiment>
-			<NumberOfNodes>19</NumberOfNodes>
+			<NumberOfNodes>25</NumberOfNodes>
 			<NumberOfCriteria>2</NumberOfCriteria>
 			<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria.xml
 			</URI>
 			<ProcessEngine>Camunda</ProcessEngine>
 		</Experiment> 
-	 	<Experiment>
+			<Experiment>
 			 <NumberOfNodes>24</NumberOfNodes>
-					<NumberOfCriteria>3</NumberOfCriteria>
+					<NumberOfCriteria>2</NumberOfCriteria>
 					<URI>/home/skourama/workspace/processsynthesis/UserCriteria/Criteria2.xml
 					</URI>
 					<ProcessEngine>Camunda</ProcessEngine>

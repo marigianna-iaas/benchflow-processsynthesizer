@@ -3,7 +3,9 @@ package de.unistuttgart.iaas.newbpmnprocess.composer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.w3c.dom.Document;
+
 import de.unistuttgart.iaas.newbpmnprocess.model.ConnectionPoint;
 import de.unistuttgart.iaas.newbpmnprocess.model.FragmentExt;
 
@@ -38,7 +40,7 @@ public class NewProcessComposer {
 		else{	
 			 List<FragmentExt> fragmentsToSynthesize = 
 					getFragmentsToSynthesize(selectedFragments, linkableFragmentsMemory.getMemory());
-			 newProcessFileName = linkFragments(fragmentsToSynthesize);
+			 newProcessFileName = createSyntheticProcess(fragmentsToSynthesize);
 		}
 		return newProcessFileName;
 	}
@@ -93,14 +95,15 @@ public class NewProcessComposer {
 	 					FragmentExt childFragment = childList.get(indeces.getChildColumn()); //gets from the position of fragment2Index 
 	 					if(checkLinkingCompatibility(parentFragment, childFragment)) //check middle fragments for start-end event here
 	 					{
-	 						//INVESTIGATE: do we need to execute the following line before this statement?
 	 						successfullFragmentsMemory.addToMemory(indeces.getParentRow(), indeces.getParentColumn());
-	 						if(indeces.getNextParentRow() == selectedFragments.size())
-	 						{
-	 							return successfullFragmentsMemory;
-	 						}
 	 						successfullFragmentsMemory.addToMemory(indeces.getNextParentRow(), indeces.getChildColumn());
 	 						indeces.setIndeces(indeces.getNextParentRow(), indeces.getChildColumn(), 0);
+	 						if(indeces.getNextParentRow() == selectedFragments.size())
+	 						{
+	 							
+	 							return successfullFragmentsMemory;
+	 						}
+	 						
 	 			 			getIndecesOfFragmentsToCompose(selectedFragments, indeces, successfullFragmentsMemory);
 	 					}
 	 					indeces.setChildColumn(indeces.getNextChildColumn());
@@ -138,15 +141,16 @@ public class NewProcessComposer {
 	 * Checks compatibility between two fragments
 	 * if they have the same amound of connections 
 	 * TODO: see if this compatibility can be extended to avoid deadlocks?
+	 * @param rowLevel 
 	 */
 	private static boolean checkLinkingCompatibility(FragmentExt parentFragment, FragmentExt childFragment) {
 		
 		if(parentFragment.getOutgoingConnections() != 0 && childFragment.getIncomingConnections() !=0)
-			return (parentFragment.getOutgoingConnections() == childFragment.getIncomingConnections()) ;
-		else
+		{
+			return( parentFragment.getOutgoingConnections() >= childFragment.getIncomingConnections());
+		}
 			return false;
 	}
-	
 
 
 	/**
@@ -155,7 +159,7 @@ public class NewProcessComposer {
 	 * @param fragmentsToSynthesize
 	 * @return
 	 */
-	private static String linkFragments(List<FragmentExt> fragmentsToSynthesize)
+	private static String createSyntheticProcess(List<FragmentExt> fragmentsToSynthesize)
 	{
 	  	int index = 0;
 		ProcessXMLEditor processEditor = new ProcessXMLEditor();
@@ -164,48 +168,102 @@ public class NewProcessComposer {
 		finalProcessXML = processEditor.addFirstFragmentToProcess(finalProcessXML, fragmentsToSynthesize.get(0));
 		while(index < fragmentsToSynthesize.size() -1 )
 		{
-		  	FragmentExt fragmentLeft = fragmentsToSynthesize.get(index);
-		  	FragmentExt fragmentRight = fragmentsToSynthesize.get(index + 1);
+		  	FragmentExt fragmentLeft = fragmentsToSynthesize.get(index); //TODO: in an optimal scenario would choose fragments with 1 incoming or start event
+		  	FragmentExt fragmentRight = fragmentsToSynthesize.get(index + 1); //TODO: in an optimal scenario this would choose fragments with 1 outgoing or end event
 		  	
 			finalProcessXML = processEditor.appendFragmentToFile(finalProcessXML, fragmentRight);
-		  	for(ConnectionPoint connectionPointLeft : fragmentLeft.getConnectionPoints())
-		  	{
-	  		  	for(ConnectionPoint connectionPointRight : fragmentRight.getConnectionPoints())
-			  	{
-			  			while(connectionPointLeft.getNeededOutgoing() > 0 && connectionPointRight.getNeededIncoming() > 0 )
-				  		{  	
-				  			processEditor.linkConnectionPoints(connectionPointLeft, connectionPointRight);
-				  			connectionPointLeft = processEditor.getBaseCp();
-				  			connectionPointRight = processEditor.getCompareCP();
-				  			
-				  		}
-				  		if(connectionPointLeft.getNeededIncoming() > 0  && connectionPointRight.getNeededOutgoing() > 0 )
-				  		{
-				  			while(connectionPointRight.getNeededOutgoing() > 0 )
-				  			{
-				  				//f2, f1, cp2, cp1, finalProcessXML
-					  			processEditor.linkConnectionPoints(connectionPointRight, connectionPointLeft);
-					 			connectionPointRight = processEditor.getBaseCp();
-					  			connectionPointLeft = processEditor.getCompareCP();
-				  			}
-				  		}
-			  	}
-		  	}
-			index++;
-		}	
-		FragmentExt lastFragment = fragmentsToSynthesize.get(fragmentsToSynthesize.size() -1 );
-	  	for(ConnectionPoint connectionPointOfLastFragment : lastFragment.getConnectionPoints())
-	  	{
-	  		while(connectionPointOfLastFragment.getNeededOutgoing() > 0 )
-	  		{
-	  			processEditor.addEndEvent(connectionPointOfLastFragment);
-	  			connectionPointOfLastFragment = processEditor.getBaseCp();
-	  		}
-	  	}
-				
+		
+
+			processEditor = linkFragments(processEditor, fragmentLeft.getConnectionPointsByType("ParallelGatewayImpl" ), fragmentRight.getConnectionPoints());
+			processEditor = linkFragments(processEditor, fragmentLeft.getConnectionPointsByType("ExclusiveGatewayImpl" ), fragmentRight.getConnectionPoints());
+			processEditor = linkFragments(processEditor, fragmentLeft.getConnectionPointsByType("CallActivityImpl" ), fragmentRight.getConnectionPoints());
+			processEditor = linkFragments(processEditor, fragmentLeft.getConnectionPointsByType("TaskImpl" ), fragmentRight.getConnectionPoints());
+			index ++;
+		}
+		processEditor = fixStartEvent(processEditor, fragmentsToSynthesize.get(0));
+		processEditor = fixEndEvents(processEditor , fragmentsToSynthesize);
+		
+		
 		return processEditor.writeProcessToXML();
 	}
-	
 
+	
+private static ProcessXMLEditor fixStartEvent(ProcessXMLEditor processEditor, FragmentExt firstFragment) {
+	
+  	for(ConnectionPoint connectionPointLeft : firstFragment.getConnectionPoints())
+  	{
+  		if(connectionPointLeft.getNeededIncoming() > 0)
+  		{
+  			processEditor.addStartEventToConnectionPoint(connectionPointLeft);
+  			connectionPointLeft.fixConnectedIncoming();
+  			connectionPointLeft.setNeededIncoming(0);
+  			break;
+  		}
+  	}
+  	return processEditor;
+
+}
+
+
+private static ProcessXMLEditor linkFragments(ProcessXMLEditor processEditor, List<ConnectionPoint> connectionPointsLeft, List<ConnectionPoint> connectionPointsRight )
+{
+	
+  	for(ConnectionPoint connectionPointLeft : connectionPointsLeft)
+  	{
+		for(ConnectionPoint connectionPointRight : connectionPointsRight)
+	  	{
+		  		//FIXME: optimization - it will take the connection point irrelevant to their expected incoming or outgoing edges
+		  		while(connectionPointLeft.getNeededOutgoing() > 0 && connectionPointRight.getNeededIncoming() > 0 )
+		  		{
+		  			processEditor.linkSequenceFlowsOfConnectionPoints(connectionPointLeft, connectionPointRight);
+		  			connectionPointLeft.fixConnectedOutgoing();
+		  			connectionPointRight.fixConnectedIncoming();
+		  		}
+	  	}
+  	}
+	return processEditor;
+
+}
+	
+	
+	private static ProcessXMLEditor fixEndEvents(ProcessXMLEditor processEditor, 
+			List<FragmentExt> fragmentsToSynthesize
+			) {
+					
+		for(FragmentExt currFragment: fragmentsToSynthesize)
+		{
+			System.out.println("Fragment:"+ currFragment.getId());
+		  	for(ConnectionPoint connectionPointOfCurrFragment : currFragment.getConnectionPoints())
+		  	{
+		  		while(connectionPointOfCurrFragment.getNeededOutgoing() > 0 )
+		  		{
+		  			if(connectionPointOfCurrFragment.getType().equals("CallActivityImpl") || connectionPointOfCurrFragment.getType().equals("TaskImpl"))
+		  			{
+		  				processEditor.addEndEventToConnectionPoint(connectionPointOfCurrFragment);
+		  				connectionPointOfCurrFragment.fixConnectedOutgoing();
+		  				connectionPointOfCurrFragment.setNeededOutgoing(0);	//even if more were needed it should be enough
+		  			}
+		  			else if (connectionPointOfCurrFragment.getType().equals("ExclusiveGatewayImpl") || connectionPointOfCurrFragment.getType().equals("ParallelGatewayImpl")) 
+		  			{
+		  				if(connectionPointOfCurrFragment.getNeededOutgoing() == 1)
+		  				{
+			  				processEditor.addEndEventToConnectionPoint(connectionPointOfCurrFragment);
+			  				connectionPointOfCurrFragment.fixConnectedOutgoing();
+			  				connectionPointOfCurrFragment.setNeededOutgoing(0);
+		  				}
+		  				else if (connectionPointOfCurrFragment.getNeededOutgoing() >= 1)
+		  				{
+			  				processEditor.addRelaxPointAndEndEvent(connectionPointOfCurrFragment);
+			  				connectionPointOfCurrFragment.fixConnectedOutgoing();
+			  				System.out.println("Relax point (extra task) should be added to node: " + currFragment.getId() + "for consistency");
+			  				connectionPointOfCurrFragment.setNeededOutgoing(1);	//here one more will be left which should be one
+		  				}
+		  				
+		  			}
+		  		}
+		  	}
+		}
+		return processEditor;
+	}
 	
 }

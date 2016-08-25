@@ -3,49 +3,15 @@
 <Criteria xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com CriteriaSchema.xsd">
 
   <fragments>
-      <fragment>
+     <!--  <fragment>
 
       <DetailActivities>
 
-        <ScriptTasks>0</ScriptTasks>
+        <ScriptTasks>6</ScriptTasks>
 
         <ServiceTasks>0</ServiceTasks>
 
-        <CallActivities>7</CallActivities>
-
-      </DetailActivities>
-
-      <ExclusiveGateways>0</ExclusiveGateways>
-
-     <ParallelGateways>1</ParallelGateways>
-
-    </fragment>
-	<fragment>
-
-      <DetailActivities>
-
-        <ScriptTasks>0</ScriptTasks>
-
-        <ServiceTasks>0</ServiceTasks>
-
-        <CallActivities>5</CallActivities>
-
-      </DetailActivities>
-
-      <ExclusiveGateways>3</ExclusiveGateways>
-
-      <ParallelGateways>0</ParallelGateways>
-
-    </fragment>
-      <fragment>
-
-      <DetailActivities>
-
-        <ScriptTasks>0</ScriptTasks>
-
-        <ServiceTasks>0</ServiceTasks>
-
-        <CallActivities>5</CallActivities>
+        <CallActivities>0</CallActivities>
 
       </DetailActivities>
 
@@ -53,7 +19,61 @@
 
       <ParallelGateways>0</ParallelGateways>
 
+    </fragment> 
+     <fragment>
+
+      <DetailActivities>
+
+        <ScriptTasks>0</ScriptTasks>
+
+        <ServiceTasks>0</ServiceTasks>
+
+        <CallActivities>9</CallActivities>
+
+      </DetailActivities>
+
+      <ExclusiveGateways>3</ExclusiveGateways>
+
+     <ParallelGateways>1</ParallelGateways>
+
+    </fragment> -->
+    
+       <fragment>
+
+      <DetailActivities>
+
+        <ScriptTasks>0</ScriptTasks>
+
+        <ServiceTasks>0</ServiceTasks>
+
+        <CallActivities>6</CallActivities>
+
+      </DetailActivities>
+
+      <ExclusiveGateways>4</ExclusiveGateways>
+
+     <ParallelGateways>1</ParallelGateways>
+
     </fragment>
+  
+          <fragment>
+
+      <DetailActivities>
+
+        <ScriptTasks>0</ScriptTasks>
+
+        <ServiceTasks>0</ServiceTasks>
+
+        <CallActivities>9</CallActivities>
+
+      </DetailActivities>
+
+      <ExclusiveGateways>1</ExclusiveGateways>
+
+     <ParallelGateways>1</ParallelGateways>
+
+    </fragment>
+  
 
     </fragments>
   <SynthesizedProcess>

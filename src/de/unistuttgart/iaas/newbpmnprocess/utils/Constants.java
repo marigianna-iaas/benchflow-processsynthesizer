@@ -39,7 +39,7 @@ public class Constants {
 	// Section 2
 	// Constants used in FileLoad class
 	//public static   String FragmentsDirectoryPath="C:\\Users\\Abdul Wahab\\workspace\\CleanBpmnFiles\\Fragments";
-	public static   String FragmentsDirectoryPath="../../fragmentsICWS";
+	public static   String FragmentsDirectoryPath="../../fragments";
 	//public static   String FragmentsDirectoryPath="/home/skourama/workspace/processsynthesis/testFragments/newTest";
 	//End Section 2
 	

@@ -22,14 +22,12 @@ public class DBConnection {
 			Class.forName(Constants.JdbcDriverName).newInstance();
 			conn = DriverManager.getConnection(Constants.ConnectionUrl, Constants.ConnectionUser, Constants.ConnectionPassword);
 		}
-		
 		catch (Exception ex)
 		{
 			System.out.println(ex.getMessage());
 			try {
 				wait(300000);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

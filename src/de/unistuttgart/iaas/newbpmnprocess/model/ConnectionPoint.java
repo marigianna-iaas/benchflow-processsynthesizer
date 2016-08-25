@@ -9,6 +9,8 @@ public class ConnectionPoint{
 	private int neededOutgoing;
 	private String type;
 	private FlowNode flownode;
+	private boolean isFlexible; //if it comes from a 1-1- gateway then it can have incoming or outgoing
+	private String fid;
 	
 	public ConnectionPoint(String fid, String type,  FlowNode node)
 	{
@@ -17,14 +19,16 @@ public class ConnectionPoint{
 		this.neededIncoming = 0;
 		this.neededOutgoing = 0;
 		this.flownode = EcoreUtil.copy(node);
+		this.isFlexible = false;
 	}
-	public ConnectionPoint(String fid, String type, int incoming, int outgoing, FlowNode node)
+	public ConnectionPoint(String fid, String type, int incoming, int outgoing, FlowNode node, boolean isFlexible)
 	{
 		this.fid = fid;
 		this.type = type;
 		this.neededIncoming = incoming;
 		this.neededOutgoing = outgoing;
 		this.flownode = EcoreUtil.copy(node);
+		this.isFlexible = isFlexible;
 	}
 
 	
@@ -85,7 +89,39 @@ public class ConnectionPoint{
 		this.fid = fid;
 	}
 
-	private String fid;
+	public boolean isFlexible ()
+	{
+		return isFlexible;
+	}
 
+	public void setIsFlexible(boolean isFlexible)
+	{
+		this.isFlexible = isFlexible;
+	}
+	
+	public void setNeededConnections(int incoming, int outgoing, boolean isFlexible)
+	{
+		this.setNeededIncoming(incoming);
+		this.setNeededOutgoing(outgoing);
+		this.setIsFlexible(isFlexible);
+	}
+	
+	public void fixConnectedOutgoing() {
+		this.setNeededOutgoing(this.getNeededOutgoing() -1 );
+		if(this.isFlexible())
+		{
+			this.setNeededIncoming(this.getNeededIncoming() -1 );
+			this.setIsFlexible(false);
+		}
+	}
+	
+	public void fixConnectedIncoming() {
+		this.setNeededIncoming(this.getNeededIncoming() -1 );
+		if(this.isFlexible())
+		{
+			this.setNeededOutgoing(this.getNeededOutgoing() -1 );
+			this.setIsFlexible(false);
+		}
+	}
 	
 }

@@ -129,8 +129,18 @@ public class UserDefinedCriteria {
 			try {
 				// if(resultFragments != null) resultFragments.beforeFirst();
 				while (resultFragments.next()) {
-					FragmentExt selectedFragment = createFragmentExtFromDB(resultFragments);
-					tmp.add(selectedFragment);
+					FragmentExt selectedFragment = createFragmentExtFromDB(crCnt, resultFragments);
+//					if(crCnt != 0)
+//					{	
+						tmp.add(selectedFragment);
+//					}
+//					else	 //first fragment needs special treatment
+//					{
+//						if(selectedFragment.getIncomingConnections() <= 1)
+//						{
+//							tmp.add(selectedFragment);
+//						}
+//					}
 				}
 				if (!tmp.isEmpty())
 					selectedFragments.add(tmp);
@@ -147,7 +157,7 @@ public class UserDefinedCriteria {
 
 	}
 
-	public FragmentExt createFragmentExtFromDB(ResultSet resultFragment) {
+	public FragmentExt createFragmentExtFromDB(int crCnt, ResultSet resultFragment) {
 
 		String fid;
 		try {
@@ -163,10 +173,11 @@ public class UserDefinedCriteria {
 		int numberOfServiceTasks = resultFragment.getInt("numberOfServiceTasks");
 		int numberOfParallelGateways = resultFragment.getInt("numberOfParallelGateways");
 		int numberOfExclusiveGateways = resultFragment.getInt("numberOfExclusiveGateways");
-
+		boolean hasNonCoreElemenets = resultFragment.getBoolean("hasNonCoreElemenets");
+		
 		FragmentExt fragment = new FragmentExt(fid, filepath, hasStartEvent,
 				hasEndEvent, numberOfFlowNodes,   numberOfCallActivities, 
-				 numberOfScriptTasks,  numberOfServiceTasks,  numberOfParallelGateways, numberOfExclusiveGateways ); 
+				 numberOfScriptTasks,  numberOfServiceTasks,  numberOfParallelGateways, numberOfExclusiveGateways, hasNonCoreElemenets ); 
 		
 		return fragment;
 		} catch (SQLException e) {
@@ -189,7 +200,7 @@ public class UserDefinedCriteria {
 		
 		String query = 
 				"select * from fragments where" + " ";
-		query +=  scriptTaskQuery + " = " + cr.getTask();
+		query +=  scriptTaskQuery + " =" + cr.getTask();
 		query += andStr;
 		query +=  serviceTaskQuery + " = " + cr.getServiceTask();
 		query += andStr;
@@ -199,18 +210,16 @@ public class UserDefinedCriteria {
 		query += andStr;
 		query +=  parallelGatewayQuery + " = " + cr.getParalGateway();
 		//check position of fragments to restrict the existence of start or end events
-		if (fragmentPos == 0) {
-			query += andStr;
-			query += "hasStartEvent = 1 "; 
-			query += andStr;
-			query += " hasEndEvent = 0 ";
-		} else if (fragmentPos == totalSize - 1) {
+		//I am not checking anything for the first position , because it may already have an End Event as a first fragment
+		if (fragmentPos == totalSize - 1) {
 			query += andStr;
 			query += "hasStartEvent = 0 ";
 		} else {
 			query += andStr;
 			query += "hasStartEvent = 0 AND hasEndEvent = 0 ";
 		}
+		query += andStr;
+		query += "hasNonCoreElemenets = 0 ";
 		query += queryEnd;
 		return query;
 	}
